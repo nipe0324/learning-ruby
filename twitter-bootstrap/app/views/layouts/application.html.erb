@@ -13,6 +13,12 @@
 <body>
 <%= render 'layouts/header' %>
 <div class="container">
+  <% flash.each do |name, msg| %>
+    <div class="alert alert-<%= name == "notice" ? "success" : "error" %>">
+      <a class="close" data-dismiss="alert">×</a> <!-- アラートダイアログに×ボタンをつける -->
+      <%= msg %>
+    </div>
+  <% end %>
   <div class="row">
     <div class="span8">
       <%= yield %>

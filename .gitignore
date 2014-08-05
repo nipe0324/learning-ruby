@@ -15,4 +15,4 @@
 /log/*.log
 /tmp
 
-devise/config/setings.yml
+devise/config/settings.yml

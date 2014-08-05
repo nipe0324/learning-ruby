@@ -6,6 +6,9 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# settings.ymlを読み込み
+ENV.update YAML.load_file('config/settings.yml')[Rails.env] rescue {}
+
 module Devise
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

@@ -232,7 +232,7 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   # 先ほど設定した値を記載して下さい。
-  config.omniauth :twitter, "blrtbzjf01rt4TYvwSLCJ2H62", "oagXVukGt8rqsHyKygHzaPkfRogLDtskHTU93IhbxUSk4qT2Bo"
+  config.omniauth :twitter, ENV['twitter_id'], ENV['twitter_secret'] 
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

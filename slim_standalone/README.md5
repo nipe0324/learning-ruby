@@ -1,0 +1,9 @@
+Install slim
+```
+$ gem install slim
+```
+
+Convert slim to html
+```
+$ slimrb index.slim index.html
+```

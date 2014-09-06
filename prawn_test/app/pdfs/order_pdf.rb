@@ -1,4 +1,6 @@
 class OrderPDF < Prawn::Document
+  # number_to_currencyメソッドを追加するためにインクルード
+  include ActiveSupport::NumberHelper
 
   def initialize(order)
     super()
@@ -69,11 +71,11 @@ class OrderPDF < Prawn::Document
 
     # テーブルのデータ部
     @order.line_items.map.with_index do |item, i|
-      arr << [i+1, item.product_name, item.price, item.quantity, item.total_price]
+      arr << [i+1, item.product_name, number_to_currency(item.price), item.quantity, number_to_currency(item.total_price)]
     end
 
     # テーブルの合計部
-    arr << ["", "", "", "合計", @order.total_price]
+    arr << ["", "", "", "合計", number_to_currency(@order.total_price)]
     return arr
   end
 end

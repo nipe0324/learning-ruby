@@ -1,0 +1,41 @@
+<%- model_class = Order -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong>注文番号:</strong></dt>
+  <dd><%= @order.id %></dd>
+  <dt><strong>注文日:</strong></dt>
+  <dd><%= @order.purchased_at %></dd>
+</dl>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>品名</th>
+      <th>単価</th>
+      <th>数量</th>
+      <th>値段</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @order.line_items.each_with_index do |line_item, idx| %>
+      <tr>
+        <td><%= idx + 1 %></td>
+        <td><%= line_item.product_name %></td>
+        <td><%= number_to_currency line_item.price %></td>
+        <td><%= line_item.quantity %></td>
+        <td><%= number_to_currency line_item.total_price %></td>
+      </tr>
+    <% end %>
+
+    <tr class="warning">
+      <td colspan="3" />
+      <td>合計</td>
+      <td><%= number_to_currency @order.total_price %></td>
+    </tr>
+  </tbody>
+</table>

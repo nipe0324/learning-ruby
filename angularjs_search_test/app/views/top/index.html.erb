@@ -1,0 +1,12 @@
+<h2>記事検索</h2>
+
+検索: <input ng-model="query" />
+
+<div ng-controller="ArticlesCtrl">
+  <ul>
+    <li ng-repeat=" article in articles | filter:query ">
+      <h3>{{ article.title }}</h3>
+      <p>{{ article.content }}</p>
+    </li>
+  </ul>
+</div>

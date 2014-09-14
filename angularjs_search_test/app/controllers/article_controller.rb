@@ -1,6 +1,8 @@
 class ArticleController < ApplicationController
   def index
-    render json: Article.order("created_at DESC")
+    @articles = Article.order("created_at DESC")
+
+    render json: @articles
   end
 
   def show

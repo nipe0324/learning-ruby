@@ -1,0 +1,15 @@
+DOCTYPE
+html
+head
+  title SlimTest
+  = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+  = javascript_include_tag 'application', 'data-turbolinks-track' => true
+  = csrf_meta_tags
+
+body
+
+header#header
+  h1.title.logo Slim Test
+
+| Slimのテストです
+== yield

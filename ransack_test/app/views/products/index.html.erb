@@ -1,0 +1,67 @@
+<h1>Listing products</h1>
+
+<%# form_for の代わりに search_form_for を使うことで検索フォームを作成 %>
+<%= search_form_for @q do |f| %>
+
+  <%# start 特定の文字列で始まる商品名で検索 %>
+  <%= f.label :name_start, "商品名" %>
+  <%= f.search_field :name_start %>
+  <br />
+
+  <%# cont 文字列が含まれる商品説明で検索（not_cont で含まれない商品説明） %>
+  <%= f.label :description_cont, "商品説明" %>
+  <%= f.search_field :description_cont %>
+  <br />
+
+  <%# 関連の名前で検索 Product.carrier.name %>
+  <%= f.label :carrier_name_cont, "キャリア" %>
+  <%= f.search_field :carrier_name_cont %>
+  <br />
+
+  <%# lt で特定の数値より下で検索（gt はより上、eq は同じ、gteqやlteqなどもできる） %>
+  <%= f.label :price_lt, "値段(以下)" %>
+  <%= f.search_field :price_lt %>
+  <br />
+
+  <%# or で複数の値をorで検索（and 複数の値をand条件で検索） %>
+  <%= f.label :name_or_description_cont, "名前 or 説明" %>
+  <%= f.search_field :name_or_description_cont %>
+  <br />
+
+  <%# 検索ボタン %>
+  <%= f.submit %>
+<% end %>
+
+<hr />
+
+<table>
+  <thead>
+    <tr>
+      <th><%= sort_link(@q, :name) %></th>
+      <th>Description</th>
+      <th><%= sort_link(@q, :price, default_order: :desc) %></th>
+      <th>Discontinued</th>
+      <th>Carrier</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.name %></td>
+        <td><%= product.description %></td>
+        <td><%= product.price %></td>
+        <td><%= product.discontinued %></td>
+        <td><%= product.carrier.name %></td>
+        <td><%= link_to 'Show', product %></td>
+        <td><%= link_to 'Edit', edit_product_path(product) %></td>
+        <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Product', new_product_path %>

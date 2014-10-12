@@ -26,7 +26,7 @@ RSpec.describe Api::TasksController, :type => :controller do
 
     describe "#create" do
       let(:post_create) do
-        post :create, task_list_id: task_list.id, description: "New Task"
+        post :create, task_list_id: task_list.id, task: { description: "New Task" }
       end
 
       it "is expected to add the record to the database" do
@@ -44,12 +44,23 @@ RSpec.describe Api::TasksController, :type => :controller do
         post_create
         expect(Task.order(:id).last.description).to eq "New Task"
       end
+
+      it "is expected to raise ParameterMissing exception when task param is missing" do
+        expect {
+          post :create, task_list_id: task_list.id
+        }.to raise_error ActionController::ParameterMissing
+      end
+
+      it "is expected to ignore unknown parameters" do
+        post :create, task_list_id: task_list.id, task: { description: "New Task", foobar: 1234 }
+        expect(response).to be_ok
+      end
     end
 
     describe "#update" do
       let(:patch_update) do
         patch :update, task_list_id: task_list.id, id: task1.id,
-          description: "New description", priority: 1, completed: true
+          task: { description: "New description", priority: 1, completed: true }
       end
 
       it "is expected to update passed parameters of the given task" do

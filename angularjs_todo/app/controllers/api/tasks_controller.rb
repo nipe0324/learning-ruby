@@ -29,6 +29,6 @@ class Api::TasksController < ApplicationController
     end
 
     def safe_params
-      params.permit(:description, :priority, :completed)
+      params.require(:task).permit(:description, :priority, :completed)
     end
 end

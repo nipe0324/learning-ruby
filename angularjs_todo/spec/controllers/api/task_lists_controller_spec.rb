@@ -10,7 +10,7 @@ RSpec.describe Api::TaskListsController, :type => :controller do
 
         it "is expected to return json of array of those task lists" do
           get :index
-          expect(json_response).to eq [{ 'id' => user.task_list.id }]
+          expect(json_response).to eq [{ 'id' => user.first_list.id }]
         end
       end
 

@@ -11,11 +11,11 @@ RSpec.describe HomeController, :type => :controller do
       expect(response).to render_template("index")
     end
 
-    it "is expected to redirect to the user's task list if singed in" do
+    it "is expected to redirect to the user's task lists if singed in" do
       sign_in(user)
       get :index
 
-      expect(response).to redirect_to(task_list_path(id: user.task_list))
+      expect(response).to redirect_to(task_lists_path)
     end
   end
 

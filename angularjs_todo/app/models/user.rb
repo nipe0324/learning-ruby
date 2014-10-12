@@ -7,4 +7,8 @@ class User < ActiveRecord::Base
   has_one :task_list, foreign_key: :owner_id
 
   after_create :create_task_list
+
+  def clear_authentication_token!
+    update_attribute(:authentication_token, nil)
+  end
 end

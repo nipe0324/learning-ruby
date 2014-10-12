@@ -160,9 +160,4 @@ RSpec.describe Api::TasksController, :type => :controller do
     end
   end
 
-  private
-
-  def json_response
-    @json_response ||= JSON.parse(response.body)
-  end
 end

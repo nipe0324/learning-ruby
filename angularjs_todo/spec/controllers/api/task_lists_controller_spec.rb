@@ -16,9 +16,10 @@ RSpec.describe Api::TaskListsController, :type => :controller do
       end
 
       it "is expected to return error json with 401 HTTP status when not authenticated" do
-        get :index
+        get :index, format: :json
         tasks = JSON.parse(response.body)
-        expect(tasks['error']).to  eq 'unauthorized'
+
+        expect(tasks['error']).to  eq 'You need to sign in or sign up before continuing.'
         expect(response.status).to eq 401
       end
 

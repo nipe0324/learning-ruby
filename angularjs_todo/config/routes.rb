@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   resources :task_lists, only: [:show]
 
   namespace :api, defaults: { format: :json } do
+    devise_scope :user do
+      resource :session, only: [:create, :destroy]
+    end
+
     resources :task_lists, only: [:index] do
       resources :tasks, only: [:index, :create, :update, :destroy]
     end

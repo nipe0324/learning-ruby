@@ -5,13 +5,10 @@ angular.module('todoApp').factory 'Task', ($resource, $http) ->
         { task_list_id: taskListId },
         { update: { method: 'PUT' }})
 
-      # # Fix needed for the PATCH method to use application/json content type.
-      # defaults = $http.defaults.headers
-      # defaults.patch = defaults.patch || {}
-      # defaults.patch['Content-Type'] = 'application/json'
-
     create: (attrs) ->
-      new @service(task: attrs).save()
+      new @service(task: attrs).$save (task) ->
+        attrs.id = task.id
+      attrs
 
     update: (task, attrs) ->
       new @service(task: attrs).$update(id: task.id)

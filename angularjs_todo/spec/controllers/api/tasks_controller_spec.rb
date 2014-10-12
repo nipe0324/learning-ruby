@@ -40,6 +40,15 @@ RSpec.describe Api::TasksController, :type => :controller do
         expect(response).to be_success
       end
 
+      it "is expected to return json of the just created record" do
+        post_create
+        expect(json_response["id"]).to eq           3
+        expect(json_response["completed"]).to eq    false
+        expect(json_response["description"]).to eq  "New Task"
+        expect(json_response["due_date"]).to eq     nil
+        expect(json_response["priority"]).to eq     nil
+      end
+
       it "is expected to preserve passed parameters" do
         post_create
         expect(Task.order(:id).last.description).to eq "New Task"
@@ -96,4 +105,10 @@ RSpec.describe Api::TasksController, :type => :controller do
     end
 
   end
+
+  private
+
+    def json_response
+      @json_response ||= JSON.parse(response.body)
+    end
 end

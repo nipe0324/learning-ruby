@@ -10,9 +10,8 @@ class Api::TaskListsController < Api::BaseController
   end
 
   def create
-    name = params[:list][:name]
-    list = TaskList.create(owner_id: current_user.id, name: name)
-    render json: last
+    list = current_user.task_lists.create!(safe_params)
+    render json: list
   end
 
   def destroy
@@ -27,5 +26,9 @@ class Api::TaskListsController < Api::BaseController
 
     def task_list
       @task_list ||= TaskList.find(params[:id])
+    end
+
+    def safe_params
+      params.require(:list).permit(:name)
     end
 end

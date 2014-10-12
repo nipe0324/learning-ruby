@@ -70,11 +70,6 @@ RSpec.describe Api::TasksController, :type => :controller do
         expect(t2.reload.priority).to     eq 3
       end
 
-      it "is expected to preserve passed parameters" do
-        post_create
-        expect(Task.order(:id).last.description).to eq "New task"
-      end
-
       it "is expected to raise ParameterMissing exception when task param is missing" do
         expect {
           post :create, task_list_id: task_list.id

@@ -6,6 +6,7 @@ FactoryGirl.define do
 
   factory :task_list, aliases: [:list] do
     owner
+    name "最初のリスト"
   end
 
   factory :task do

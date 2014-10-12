@@ -6,7 +6,8 @@ angular.module('todoApp').controller "TodoListController", ($scope, $timeout, $r
     @taskService = new Task($routeParams.list_id, serverErrorHandler)
     @listService = new TaskList()
     @listService.find $routeParams.list_id, (list) ->
-      $scope.tasks = list.tasks
+      $scope.tasks    = list.tasks
+      $scope.listName = list.name
 
   $scope.addTask = ->
     raisePriorities()

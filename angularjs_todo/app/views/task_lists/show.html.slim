@@ -1,1 +1,8 @@
-p List
+div(ng-app='todoApp' ng-controller="TodoListController" ng-init="init(#{@task_list.id})")
+  form(ng-submit="addTask()")
+    input(type="text" ng-model="taskDescription")
+    input(class="btn-primary" type="submit" valud="追加")
+
+  ul
+    li(ng-repeat="task in tasks")
+      ' {{ task.description }}

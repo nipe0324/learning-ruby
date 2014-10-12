@@ -2,8 +2,6 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :task_lists, only: [:index, :show]
-
   namespace :api, defaults: { format: :json } do
     devise_scope :user do
       resource :session, only: [:create, :destroy]
@@ -16,4 +14,6 @@ Rails.application.routes.draw do
 
   root to: "home#index"
 
+  get '/dashboard'      => 'templates#index'
+  get '/task_lists/:id' => 'templates#index'
 end

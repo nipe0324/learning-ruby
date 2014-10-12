@@ -64,6 +64,12 @@ RSpec.describe Api::TasksController, :type => :controller do
         post :create, task_list_id: task_list.id, task: { description: "New Task", foobar: 1234 }
         expect(response).to be_ok
       end
+
+      it "is expected to raise a validation error when description is too long" do
+        expect {
+          post :create, task_list_id: task_list.id, task: { description: "a"*300 }
+        }.to raise_error ActiveRecord::RecordInvalid
+      end
     end
 
     describe "#update" do

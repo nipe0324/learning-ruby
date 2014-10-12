@@ -127,6 +127,13 @@ RSpec.describe Api::TasksController, :type => :controller do
         expect(response.status).to        eq 401
         expect(json_response["error"]).to eq 'unauthorized'
       end
+
+      it "is expected to accept unix timestamsp as value of due_date" do
+        patch :update, task_list_id: task_list.id, id: task1.id,
+          task: { due_date: '2014-10-10' }
+
+        expect(task1.reload.due_date).to eq Date.new(2014, 10, 10)
+      end
     end
 
     describe "#destroy" do

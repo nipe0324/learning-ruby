@@ -1,5 +1,9 @@
-p
-  = link_to "First list", "/task_lists/1"
+.ng-cloak(ng-init="init()")
+  p #{current_user.email}のTodoリスト
+  p(ng-repeat="list in lists")
+    a(href="/task_lists/{{ list.id }}") リスト{{ list.id }}
+    ' |
+    a(href="#" ng-click="deleteList(list, $index)") 削除
   br
-  = link_to "Second list", "/task_lists/2"
-  br
+  p
+    a(href="#" ng-click="createList()") リスト作成

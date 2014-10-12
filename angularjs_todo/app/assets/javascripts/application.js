@@ -13,6 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.datepicker
+//= require jquery.ui.sortable
 //= require turbolinks
+//= require angular.min
+//= require angular-resource.min
 //= require todoApp
 //= require_tree .

@@ -17,9 +17,9 @@ RSpec.describe Api::TasksController, :type => :controller do
         get :index, task_list_id: task_list.id
         expect(json_response).to eq [
           {'id' => task1.id, 'description' => task1.description,
-            'priority' => nil, 'due_date' => nil, 'completed' => false},
+            'priority' => 1, 'due_date' => nil, 'completed' => false},
           {'id' => task2.id, 'description' => task2.description,
-            'priority' => nil, 'due_date' => nil, 'completed' => false}
+            'priority' => 2, 'due_date' => nil, 'completed' => false}
         ]
       end
 
@@ -59,7 +59,15 @@ RSpec.describe Api::TasksController, :type => :controller do
         expect(json_response["completed"]).to   eq false
         expect(json_response["description"]).to eq "New task"
         expect(json_response["due_date"]).to    eq nil
-        expect(json_response["priority"]).to    eq nil
+      end
+
+      it "is expected to put the new task on top of the list" do
+        t1, t2 = task1, task2
+        post_create
+
+        expect(json_response['priority']).to eq 1
+        expect(t1.reload.priority).to     eq 2
+        expect(t2.reload.priority).to     eq 3
       end
 
       it "is expected to preserve passed parameters" do
@@ -97,13 +105,13 @@ RSpec.describe Api::TasksController, :type => :controller do
     describe "#update" do
       let(:patch_update) do
         patch :update, task_list_id: task_list.id, id: task1.id,
-          task: {description: "New description", priority: 1, completed: true}
+          task: {description: "New description", target_priority: 2, completed: true}
       end
 
       it "is expected to update passed parameters of the given task" do
         patch_update
         expect(task1.reload.description).to eq "New description"
-        expect(task1.priority).to eq 1
+        expect(task1.priority).to  eq 2
         expect(task1.completed).to eq true
       end
 
@@ -115,14 +123,14 @@ RSpec.describe Api::TasksController, :type => :controller do
       it "is expected to raise RecordNotFound when trying to update non-existent task" do
         expect {
           patch :update, task_list_id: task_list.id, id: 0,
-            task: {description: "New description", priority: 1, completed: true}
+            task: {description: "New description"}
         }.to raise_error(ActiveRecord::RecordNotFound)
       end
 
       it "is expected to return HTTP 401 Unauthorized when trying to update task of another user" do
         other_task = create(:task)
         patch :update, task_list_id: other_task.list.id, id: other_task.id,
-          task: {description: "New description", priority: 1, completed: true}
+          task: {description: "New description"}
 
         expect(response.status).to        eq 401
         expect(json_response["error"]).to eq 'unauthorized'

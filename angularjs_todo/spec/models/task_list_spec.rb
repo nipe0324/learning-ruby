@@ -13,5 +13,14 @@ RSpec.describe TaskList, :type => :model do
     it "is expected to have an empty list of tasks" do
       expect(task_list.tasks).to  eq []
     end
+
+    it "is expected to order tasks by priority" do
+      # New tasks go to the top, LIFO.
+      t3 = create(:task, list: task_list)
+      t2 = create(:task, list: task_list)
+      t1 = create(:task, list: task_list)
+
+      expect(task_list.tasks).to eq [t1.reload, t2.reload, t3.reload]
+    end
   end
 end

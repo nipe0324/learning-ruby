@@ -10,4 +10,7 @@ angular.module('todoApp').controller "TodoListController", ($scope, Task) ->
     $scope.taskDescription = ""
 
   $scope.toggleTask = (task) ->
-    @taskService.update(task, { completed: task.completed} )
+    @taskService.update(task, { completed: task.completed } )
+
+  $scope.taskEdited = (task) ->
+    @taskService.update(task, { description: task.description })

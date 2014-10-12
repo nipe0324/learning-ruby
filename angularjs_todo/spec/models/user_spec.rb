@@ -1,5 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe User, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "for new valid user" do
+    let(:user) { create(:user) }
+
+    it "is expected to have a corresponding task list" do
+      expect(user.task_list).to be_a(TaskList)
+    end
+  end
 end

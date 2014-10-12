@@ -22,6 +22,12 @@ RSpec.describe Api::TasksController, :type => :controller do
             'priority' => nil, 'due_date' => nil, 'completed' => false }
         ]
       end
+
+      it "is expected to raise RecordNotFound when trying to get tasks for non-existent list" do
+        expect {
+          get :index, task_list_id: 0
+        }.to raise_error ActiveRecord::RecordNotFound
+      end
     end
 
     describe "#create" do
@@ -90,6 +96,13 @@ RSpec.describe Api::TasksController, :type => :controller do
         patch_update
         expect(response).to be_success
       end
+
+      it "is expected to raise RecordNotFound when trying to update non-existent task" do
+        expect {
+          patch :update, task_list_id: task_list.id, id: 0,
+            task: { description: "New description", priority: 1, completed: true }
+        }.to raise_error ActiveRecord::RecordNotFound
+      end
     end
 
     describe "#destroy" do
@@ -107,6 +120,12 @@ RSpec.describe Api::TasksController, :type => :controller do
       it "is expected to return 200 OK" do
         delete_destroy
         expect(response).to be_success
+      end
+
+      it "is expected to raise RecordNotFound when trying to update non-existent task" do
+        expect {
+          delete :destroy, task_list_id: task_list.id, id: 0
+        }.to raise_error ActiveRecord::RecordNotFound
       end
     end
 

@@ -3,7 +3,7 @@ angular.module('todoApp').controller "TodoListController", ($scope, Task) ->
   $scope.sortableEnabled = true
 
   $scope.init = (taskListId) ->
-    @taskService = new Task(taskListId)
+    @taskService = new Task(taskListId, serverErrorHandler)
     $scope.tasks = @taskService.all()
 
   $scope.addTask = ->
@@ -41,15 +41,12 @@ angular.module('todoApp').controller "TodoListController", ($scope, Task) ->
   $scope.changeSortMethod = (sortMethod) ->
     $scope.sortMethod = sortMethod
     if sortMethod == 'priority'
-      enableSortable()
+      $scope.sortableEnabled = true
     else
-      disableSortable()
+      $scope.sortableEnabled = false
 
   $scope.dueDateNullLast = (task) ->
     task.due_date ? '2999-12-31'
 
-  enableSortable = ->
-    $scope.sortableEnabled = true
-
-  disableSortable = ->
-    $scope.sortableEnabled = false
+  serverErrorHandler = ->
+    alert("サーバーでエラーが発生しました。画面を更新し、もう一度実行して下さい。")

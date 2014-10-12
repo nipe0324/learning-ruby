@@ -3,6 +3,11 @@ class Api::TasksController < ApplicationController
     render json: task_list.tasks
   end
 
+  def create
+    task_list.tasks.create!(params.permit(:description))
+    render nothing: true
+  end
+
 
   private
 

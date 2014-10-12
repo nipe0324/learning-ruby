@@ -4,8 +4,8 @@ angular.module('todoApp').controller "DashboardController", ($scope, $routeParam
   $scope.init = ->
     $scope.lists = listsService.all()
 
-  $scope.createList = ->
-    listsService.create (list) ->
+  $scope.createList = (name) ->
+    listsService.create name: name, (list) ->
       $location.url("/task_lists/#{list.id}")
 
   $scope.deleteList = (list, index) ->

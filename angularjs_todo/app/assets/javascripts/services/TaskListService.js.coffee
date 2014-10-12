@@ -6,8 +6,8 @@ angular.module('todoApp').factory 'TaskList', ($resource, $http) ->
         { update: { method: 'PUT' }})
       @errorHandler = errorHandler
 
-    create: (successHandler) ->
-      new @service().$save ((list) -> successHandler(list)), @errorHandler
+    create: (attrs, successHandler) ->
+      new @service(list: attrs).$save ((list) -> successHandler(list)), @errorHandler
 
     delete: (list) ->
       new @service().$delete { id: list.id }, (-> null), @errorHandler
@@ -17,3 +17,9 @@ angular.module('todoApp').factory 'TaskList', ($resource, $http) ->
 
     all: ->
       @service.query((-> null), @errorHandler)
+
+    find: (id, successHandler) ->
+      @service.get(id: id, ((list)->
+        successHandler?(list)
+        list),
+        @errorHandler)

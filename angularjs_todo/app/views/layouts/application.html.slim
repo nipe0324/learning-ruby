@@ -1,0 +1,29 @@
+doctype html
+html
+  head
+    = tag 'meta', 'charset' => 'utf-8'
+    title Angularjs Todo Application
+    = stylesheet_link_tag    "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+
+  body
+    .container
+      .header
+        ul.nav.nav-pills.pull-right
+          li(class=active_if_current(root_path))
+            = link_to "ホーム", root_path
+          li(class=active_if_current(new_user_registration_path))
+            = link_to "ユーザー登録", new_user_registration_path
+          li(class=active_if_current(new_user_session_path))
+            = link_to "ログイン", new_user_session_path
+
+        h3.text-muted AngularJS Todo Application
+
+      - if notice.present?
+        p.alert.alert-success = notice
+      - if alert.present?
+        p.alert.alert-danger = alert
+
+      = yield

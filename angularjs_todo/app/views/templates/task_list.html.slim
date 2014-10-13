@@ -15,7 +15,7 @@
   .panel.panel-info
     .panel-heading
       h4
-        ' {{ lastName }}
+        ' {{ listName }}
     form#new_task(ng-submit="addTask()")
       .input-group
         input#taskDescription.form-control.input-lg(type="text" autofocus="autofocus" placeholder="タスク内容" maxlength="255" ng-model="taskDescription" data-non-blank)

@@ -79,7 +79,7 @@ RSpec.describe Api::TasksController, :type => :controller do
       it "is expected to ignore unknown parameters" do
         post :create, task_list_id: task_list.id,
           task: {description: "New task", foobar: 1234}
-        expect(response).to be_ok
+        expect(response.status).to eq 201
       end
 
       it "is expected to raise a validation error when description is too long" do

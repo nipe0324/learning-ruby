@@ -7,17 +7,20 @@ class Api::TasksController < Api::BaseController
 
   def create
     task = task_list.tasks.create!(safe_params)
-    render json: task
+    render json: task, status: 201
   end
 
   def update
+    logger.debug "----------------------"
+    logger.debug task.description
+    logger.debug safe_params
     task.update_attributes(safe_params)
-    render nothing: true
+    render nothing: true, status: 204
   end
 
   def destroy
     task.destroy
-    render nothing: true
+    render nothing: true, status: 204
   end
 
   private

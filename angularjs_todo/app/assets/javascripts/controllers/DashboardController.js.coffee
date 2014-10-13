@@ -2,13 +2,14 @@ angular.module('todoApp').controller "DashboardController", ($scope, $routeParam
   listsService = new TaskList()
 
   $scope.init = ->
-    $scope.lists = listsService.all()
+    @listsService = new TaskList()
+    $scope.lists = @listsService.all()
 
   $scope.createList = (name) ->
-    listsService.create name: name, (list) ->
+    @listsService.create name: name, (list) ->
       $location.url("/task_lists/#{list.id}")
 
   $scope.deleteList = (list, index) ->
     if confirm "リストを削除しますか？"
-      listsService.delete list
+      @listsService.delete list
       $scope.lists.splice(index, 1)

@@ -14,6 +14,11 @@ class Api::TaskListsController < Api::BaseController
     render json: list
   end
 
+  def update
+    task_list.update_attributes(safe_params)
+    render nothing: true
+  end
+
   def destroy
     task_list.destroy
     render nothing: true

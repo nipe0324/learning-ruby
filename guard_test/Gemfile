@@ -39,6 +39,14 @@ gem 'spring',        group: :development
 # gem 'debugger', group: [:development, :test]
 
 group :development do
-  gem 'rb-fsevent'
+  gem 'guard'
   gem 'guard-livereload', require: false
+  gem 'rubocop'
+  gem 'guard-rubocop'
+  gem 'guard-rspec', require: false
+  gem 'terminal-notifier-guard'
+end
+
+group :development, :test do
+  gem 'rspec-rails'
 end

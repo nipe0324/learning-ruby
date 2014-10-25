@@ -12,13 +12,13 @@
   </thead>
 
   <tbody>
-    <% @report_products.each do |product| %>
+    <% @products.each do |product| %>
       <tr>
         <td><%= product.id %></td>
         <td><%= product.name %></td>
         <td><%= product.price %></td>
         <td><%= product.released_on %></td>
-        <td><%= product.manufacture_name %></td>
+        <td><%= product.manufacture.name %></td>
       </tr>
     <% end %>
   </tbody>
@@ -26,7 +26,26 @@
 
 <p>
   Download:
-  <%= link_to "CSV", products_path(format: "csv") %>
+  <%= link_to "CSV", export_products_path(format: "csv") %>
   |
-  <%= link_to "Excel", products_path(format: "xls") %>
+  <%= link_to "Excel", export_products_path(format: "xls") %>
+</p>
+
+<p>
+  <%= form_for @product_report, url: import_products_path, multipart: true do |f| %>
+    <% if @product_report && @product_report.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@product_report.errors.count, "error") %> prohibited this import from completing:</h2>
+        <ul>
+        <% @product_report.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= f.label :file, "Upload:" %>
+    <%= f.file_field :file %><br />
+    <%= f.submit "Import" %>
+  <% end %>
 </p>

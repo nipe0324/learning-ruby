@@ -28,6 +28,8 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
     arel (5.0.1.20140414130214)
+    binding_of_caller (0.7.2)
+      debug_inspector (>= 0.0.1)
     builder (3.2.2)
     byebug (3.5.1)
       columnize (~> 0.8)
@@ -42,6 +44,7 @@ GEM
       execjs
     coffee-script-source (1.8.0)
     columnize (0.8.9)
+    debug_inspector (0.0.2)
     debugger-linecache (1.2.0)
     erubis (2.7.0)
     execjs (2.2.2)
@@ -74,6 +77,9 @@ GEM
       yard (~> 0.8)
     pry-rails (0.3.2)
       pry (>= 0.9.10)
+    pry-stack_explorer (0.4.9.1)
+      binding_of_caller (>= 0.7)
+      pry (>= 0.9.11)
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
@@ -141,6 +147,7 @@ DEPENDENCIES
   pry-byebug
   pry-doc
   pry-rails
+  pry-stack_explorer
   rails (= 4.1.5)
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)

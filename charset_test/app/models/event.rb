@@ -15,7 +15,8 @@ class Event < ActiveRecord::Base
     # 半角が全角に変更されてしまう
     # rows = CSV.parse(Kconv.toutf8(content))
 
-    CSV.foreach(file.path, headers: true, encoding: "CP932") do |row|
+
+    # CSV.foreach(file.path, headers: true, encoding: "CP932") do |row|
     #(1...rows.size).each do |i|
       # product = find_by_id rows[i][0]
       # product.title       = rows[i][1]
@@ -26,42 +27,70 @@ class Event < ActiveRecord::Base
 
   def self.to_csv(options = {})
     CSV.generate(options) do |csv|
-      csv << column_names
-      all.each do |product|
-        values = product.attributes.values_at(*column_names)
+      str = "全角　ﾊﾝｶｸ 〜−¢£¬−‖"
 
-        # 返還前: イベント0ｲﾍﾞﾝﾄ 概要です0〜−¢£¬−‖
+      # endodeメソッドでCP932（Windows用のSJIS拡張）に変換
+      #csv << str.encode("CP932")
+      # => エラーが発生
+      # Encoding::UndefinedConversionError: U+301C from UTF-8 to Windows-31J
 
-        # 変換後: エラー発生
-        #         Encoding::UndefinedConversionError in XXXX
-        #         U+301C from UTF-8 to Windows-31J
-        #values = values.map { |v| v.to_s.encode("cp932", "utf-8") }
+      # endodeメソッドでCP932（Windows用のSJIS拡張）に変換
+      a = str.encode("cp932", :invalid => :replace, :undef => :replace)
+      csv << [a, a.encoding, Kconv.guess(a), NKF.guess(a)]
+      # => エラーは発生しなくなるが、? で置き換えられる
 
-        # 変換後: イベント0ｲﾍﾞﾝﾄ 概要です0???????
-        # 推定  : "encoding: Windows-31J","Kconv.guess: Shift_JIS"
-        # values = values.map { |v| v.to_s.encode("cp932", "utf-8", :invalid => :replace, :undef => :replace) }
+      # endodeメソッドでCP932（Windows用のSJIS拡張）に変換（※ sjis_safeは下記参照）
+      a = sjis_safe(str).encode("cp932", :invalid => :replace, :undef => :replace)
+      csv << [a, a.encoding, Kconv.guess(a), NKF.guess(a)]
 
-        # 変換後: イベント0ｲﾍﾞﾝﾄ 概要です0〜−¢£¬−‖
-        # 推定  : "encoding: Windows-31J","Kconv.guess: Shift_JIS"
-        # values = values.map { |v| sjis_safe(v.to_s).encode("cp932", "utf-8", :invalid => :replace, :undef => :replace) }
+      a = sjis_safe(str).encode("Windows-31J", :invalid => :replace, :undef => :replace)
+      csv << [a, a.encoding, Kconv.guess(a), NKF.guess(a)]
 
-        # 変換後: イベント0イベント 概要です0〜−¢£¬−‖
-        # 推定 : "encoding: Shift_JIS","Kconv.guess: Shift_JIS"
-        # values = values.map { |v| v.to_s.kconv(Kconv::SJIS) }
+      # KconvでSJISに変換
+      require 'kconv'
+      a = str.kconv(Kconv::SJIS)
+      csv << [a, a.encoding, Kconv.guess(a), NKF.guess(a)]
 
-        # 変換後: イベント0ｲﾍﾞﾝﾄ 概要です0〜−¢£¬−‖
-        # 推定: "encoding: Shift_JIS","Kconv.guess: Shift_JIS"
-        values = values.map { |v|   NKF.nkf('-xm0 -s', v.to_s) }
+      # NKFでSJISに変換（-xm0: 半角、MIMEデコードをしない)
+      a = NKF.nkf("-xm0 -s", str)
+      csv << [a, a.encoding, Kconv.guess(a), NKF.guess(a)]
 
-        # 変換後: イベント0ｲﾍﾞﾝﾄ","概要です0¢£¬
-        # 推定: "encoding: Windows-31J","Kconv.guess: Shift_JIS"
-        # values = values.map { |v|   NKF.nkf('-xm0 --ic=UTF-8 --oc=CP932 --cp932', v.to_s) }
+      # csv << column_names
+      # all.each do |product|
+      #   values = product.attributes.values_at(*column_names)
 
-        values.push "encoding: #{values[2].encoding}"
-        values.push "Kconv.guess: #{Kconv.guess(values[2])}"
-        values.push "NKF.guess: #{NKF.guess(values[2])}"
-        csv << values
-      end
+      #   # 返還前: イベント0ｲﾍﾞﾝﾄ 概要です0〜−¢£¬−‖
+
+      #   # 変換後: エラー発生
+      #   #         Encoding::UndefinedConversionError in XXXX
+      #   #         U+301C from UTF-8 to Windows-31J
+      #   #values = values.map { |v| v.to_s.encode("cp932", "utf-8") }
+
+      #   # 変換後: イベント0ｲﾍﾞﾝﾄ 概要です0???????
+      #   # 推定  : "encoding: Windows-31J","Kconv.guess: Shift_JIS"
+      #   # values = values.map { |v| v.to_s.encode("cp932", "utf-8", :invalid => :replace, :undef => :replace) }
+
+      #   # 変換後: イベント0ｲﾍﾞﾝﾄ 概要です0〜−¢£¬−‖
+      #   # 推定  : "encoding: Windows-31J","Kconv.guess: Shift_JIS"
+      #   # values = values.map { |v| sjis_safe(v.to_s).encode("cp932", "utf-8", :invalid => :replace, :undef => :replace) }
+
+      #   # 変換後: イベント0イベント 概要です0〜−¢£¬−‖
+      #   # 推定 : "encoding: Shift_JIS","Kconv.guess: Shift_JIS"
+      #   # values = values.map { |v| v.to_s.kconv(Kconv::SJIS) }
+
+      #   # 変換後: イベント0ｲﾍﾞﾝﾄ 概要です0〜−¢£¬−‖
+      #   # 推定: "encoding: Shift_JIS","Kconv.guess: Shift_JIS"
+      #   values = values.map { |v|   NKF.nkf('-xm0 -s', v.to_s) }
+
+      #   # 変換後: イベント0ｲﾍﾞﾝﾄ","概要です0¢£¬
+      #   # 推定: "encoding: Windows-31J","Kconv.guess: Shift_JIS"
+      #   # values = values.map { |v|   NKF.nkf('-xm0 --ic=UTF-8 --oc=CP932 --cp932', v.to_s) }
+
+      #   values.push "encoding: #{values[2].encoding}"
+      #   values.push "Kconv.guess: #{Kconv.guess(values[2])}"
+      #   values.push "NKF.guess: #{NKF.guess(values[2])}"
+      #   csv << values
+      # end
     end
   end
 

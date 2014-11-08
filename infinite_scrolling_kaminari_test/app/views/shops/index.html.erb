@@ -1,0 +1,23 @@
+<h1>Listing shops</h1>
+
+<table id="shops">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Zipcode</th>
+      <th>Address</th>
+      <th>Tel</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody class="page">
+    <%= render @shops %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Shop', new_shop_path %>
+
+<%= paginate @shops %>

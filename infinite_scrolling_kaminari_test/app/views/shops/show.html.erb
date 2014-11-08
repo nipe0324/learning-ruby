@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @shop.name %>
+</p>
+
+<p>
+  <strong>Zipcode:</strong>
+  <%= @shop.zipcode %>
+</p>
+
+<p>
+  <strong>Address:</strong>
+  <%= @shop.address %>
+</p>
+
+<p>
+  <strong>Tel:</strong>
+  <%= @shop.tel %>
+</p>
+
+<%= link_to 'Edit', edit_shop_path(@shop) %> |
+<%= link_to 'Back', shops_path %>

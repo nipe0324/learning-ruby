@@ -1,0 +1,30 @@
+<h1>商品一覧</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>名前</th>
+      <th>値段</th>
+      <th>発売日</th>
+      <th>製造元</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @products.each do |product| %>
+      <tr>
+        <td><%= product.id %></td>
+        <td><%= product.name %></td>
+        <td><%= product.price %></td>
+        <td><%= product.released_on %></td>
+        <td><%= product.manufacture.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>
+  Download:
+  <%= link_to "CSV", products_path(format: "csv") %>
+</p>

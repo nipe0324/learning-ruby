@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   def index
-    @products = Product.includes(:manufacture)
+    @products = ProductCsv.query
 
     respond_to do |format|
       format.html

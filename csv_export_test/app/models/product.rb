@@ -1,14 +1,20 @@
 class Product < ActiveRecord::Base
   belongs_to :manufacture
+
+  def self.to_csv(options = {})
+    CSV.generate(options) do |csv|
+      csv << csv_column_names
+      all.each do |product|
+        csv << product.csv_column_values
+      end
+    end
+  end
+
+  def self.csv_column_names
+    ["ID", "商品名", "値段", "発売日", "製造元"]
+  end
+
+  def csv_column_values
+    [id, name, price, released_on, manufacture.name]
+  end
 end
-
-
-# product.attributes
-# => {"id"=>1, "name"=>"レコーダー", "price"=>2000, "released_on"=>Sun, 09 Nov 2014,
-#     "manufacture_id"=>1, "created_at"=>Tue, 11 Nov 2014 15:57:15 UTC +00:00,
-#     "updated_at"=>Tue, 11 Nov 2014 15:57:15 UTC +00:00}
-
-# column_names
-# =>  ["id", "name", "price", "released_on", "manufacture_id", "created_at", "updated_at"]
-
-# => [1, "レコーダー", 2000, Sun, 09 Nov 2014, 1, Tue, 11 Nov 2014 15:57:15 UTC +00:00, Tue, 11 Nov 2014 15:57:15 UTC +00:00]

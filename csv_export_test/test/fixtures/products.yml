@@ -3,11 +3,11 @@
 one:
   name: MyString
   price: 1
-  released_on: 2014-11-12
+  released_on: 2014-11-15
   manufacture_id: 
 
 two:
   name: MyString
   price: 1
-  released_on: 2014-11-12
+  released_on: 2014-11-15
   manufacture_id: 

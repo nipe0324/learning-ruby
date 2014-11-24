@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GuestWithDeviseTest</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<header>
+  <nav>
+    <% if user_signed_in? %>
+      Logged in as <strong><%= current_user.username %></strong>.
+      <% if guest_user? %>
+        <%= link_to "メンバーになる", new_user_registration_path %>
+      <% else %>
+        <%= link_to "プロフィール変更", edit_user_registration_path %> |
+        <%= link_to "ログアウト", destroy_user_session_path, method: :delete %>
+      <% end %>
+    <% else %>
+      <%= link_to "ユーザー登録", new_user_registration_path %> |
+      <%= link_to "ログイン", new_user_session_path %>
+    <% end %>
+  </nav>
+</header>
+
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+
+<%= yield %>
+
+</body>
+</html>

@@ -7,6 +7,7 @@ require 'rspec/rails'
 require 'capybara/rails'
 require 'capybara/rspec'
 #require 'capybara/poltergeist'  # Add
+require 'support/deferred_garbage_collection'
 
 #Capybara.javascript_driver = :poltergeist  # Add
 Capybara.javascript_driver = :webkit  # Add
@@ -29,6 +30,15 @@ Capybara.javascript_driver = :webkit  # Add
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
+
+# setup_sqlite_db = lambda do
+#   ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
+
+#   load "#{Rails.root.to_s}/db/schema.rb" # use db agnostic schema by default
+#   # ActiveRecord::Migrator.up('db/migrate') # use migrations
+# end
+# silence_stream(STDOUT, &setup_sqlite_db)
+
 
 RSpec.configure do |config|
   # FactoryGirl でレシーバ無しでFactoryGirlのメソッド呼び出しを可能にする
@@ -69,7 +79,12 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.before(:all) do
+    DeferredGarbageCollection.start
+  end
+
   config.after(:all) do
+    DeferredGarbageCollection.reconsider
     DatabaseCleaner.clean_with :truncation # all時にDBをクリーンにする
   end
 

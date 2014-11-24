@@ -58,6 +58,8 @@ group :test do
 #  gem "poltergeist"
   gem "capybara-webkit"
   gem "database_cleaner"
+
+  gem "activerecord-nulldb-adapter"
 end
 
   # gem "capybara"

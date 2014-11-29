@@ -1,0 +1,12 @@
+<fieldset>
+  <%= f.label :zipcode, "郵便番号" %>
+  <%= f.text_field :zipcode %><br />
+  <%= f.label :city, "都道府県" %>
+  <%= f.text_field :city %><br />
+  <%= f.label :street, "市町村番" %>
+  <%= f.text_field :street %><br />
+  <%= f.label :tel, "電話番号" %>
+  <%= f.text_field :tel %><br />
+  <%= f.hidden_field :_destroy %>
+  <%= link_to "削除", '#', class: "remove_fields" %>
+</fieldset>

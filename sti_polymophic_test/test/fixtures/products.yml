@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  price: 1
+  maker_id: 1
+  cpu_id: 1
+  author_id: 1
+
+two:
+  name: MyString
+  price: 1
+  maker_id: 1
+  cpu_id: 1
+  author_id: 1

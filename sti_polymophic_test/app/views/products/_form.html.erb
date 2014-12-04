@@ -1,0 +1,41 @@
+<%= form_for(@product, as: :product) do |f| %>
+  <% if @product.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+      <ul>
+      <% @product.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :price %><br>
+    <%= f.number_field :price %>
+  </div>
+  <div class="field">
+    <%= f.label :type %><br>
+    <%= f.select :type, ["Computer", "Book"].map { |t| [t, t] }, include_blank: true %>
+  </div>
+  <div class="field">
+    <%= f.label :maker_id, "メーカー(Computer時のみ必須)" %><br>
+    <%= f.select :maker_id, Maker.all.map { |m| [m.name, m.id] }, include_blank: true %>
+  </div>
+  <div class="field">
+    <%= f.label :cpu_id, "CPU(Computer時のみ必須)" %><br>
+    <%= f.select :cpu_id, Cpu.all.map { |c| [c.name, c.id] }, include_blank: true %>
+  </div>
+  <div class="field">
+    <%= f.label :author_id, "著者(Book時のみ必須)" %><br>
+    <%= f.select :author_id, Author.all.map { |a| [a.name, a.id] }, include_blank: true %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+
+<p>
+  <strong>Name:</strong>
+  <%= @user.name %>
+</p>
+
+
+<p>
+  <strong>Group:</strong>
+  <%= @user.group.try(:name) %>
+</p>
+
+
+<!-- <p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>Password:</strong>
+  <%= @user.password %>
+</p>
+
+<p>
+  <strong>Credit card number:</strong>
+  <%= @user.credit_card_number %>
+</p>
+ -->
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>

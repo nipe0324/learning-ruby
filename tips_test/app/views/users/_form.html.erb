@@ -1,0 +1,55 @@
+<%= form_for(@user) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<!-- 変更前
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+ -->
+<!-- 変更後 -->
+  <div class="field">
+    <%= f.label :last_name, "苗字" %><br>
+    <%= f.text_field :last_name %>
+  </div>
+  <div class="field">
+    <%= f.label :first_name, "氏名" %><br>
+    <%= f.text_field :first_name %>
+  </div>
+
+
+  <div class="field">
+    <%= f.label :group_id %><br>
+    <%= f.select :group_id, Group.order(:name).map { |g| [g.name, g.id] }, include_blank: true %>
+  </div>
+  <div class="field">
+    <%= f.label :new_group_name, "グループを追加:" %>
+    <%= f.text_field :new_group_name %>
+  </div>
+
+
+<!--   <div class="field">
+    <%= f.label :email %><br>
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :password %><br>
+    <%= f.text_field :password %>
+  </div>
+  <div class="field">
+    <%= f.label :credit_card_number %><br>
+    <%= f.text_field :credit_card_number %>
+  </div>
+ -->  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

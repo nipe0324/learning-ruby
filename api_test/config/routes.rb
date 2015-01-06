@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  namespace :api, { format: 'json' } do
+    resources :products
+  end
+
   resources :products
 
   # The priority is based upon order of creation: first created -> highest priority.

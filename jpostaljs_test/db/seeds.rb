@@ -1,0 +1,1 @@
+%w(東京都 埼玉県 神奈川県 千葉県 茨城県 群馬県).each { |name| Prefecture.create! name: name }

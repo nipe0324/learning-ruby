@@ -1,0 +1,37 @@
+<%= form_for(@address) do |f| %>
+  <% if @address.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@address.errors.count, "error") %> prohibited this address from being saved:</h2>
+
+      <ul>
+      <% @address.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :zipcode, "郵便番号" %><br>
+    <%= f.text_field :zipcode, placeholder: "id=address_zipcode" %>
+  </div>
+  <div class="field">
+    <%= f.label :prefecture_name, "都道府県" %><br>
+    <%= f.collection_select :prefecture_name, Prefecture.all, :name, :name, include_blank: true  %>
+  </div>
+  <div class="field">
+    <%= f.label :city, "市町村" %><br>
+    <%= f.text_field :city, placeholder: "id=address_city" %>
+  </div>
+  <div class="field">
+    <%= f.label :street, "番地" %><br>
+    <%= f.text_field :street, placeholder: "id=address_street" %>
+  </div>
+  <div class="field">
+    <%= f.label :building, "建物" %><br>
+    <%= f.text_field :building, placeholder: "id=address_building" %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

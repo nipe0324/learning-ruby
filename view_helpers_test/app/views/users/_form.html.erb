@@ -1,0 +1,42 @@
+<%= form_for(@user) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "名前" %><br>
+    <%= f.text_field :name, disabled: true %>
+    <%= text_field_tag "user[name]", "値" %>
+  </div>
+
+  <div class="field">
+    <%= f.datetime_select :activated_at %>
+  </div>
+
+  <div class="field">
+    <% Category.all.each do |category| %>
+      <%= check_box_tag "product[category_ids][]", category.id, false, id: "product_category_ids_#{category.id}" %>
+      <%= label_tag "product[category_ids][#{category.id}]", category.name %>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= f.select :prefecture_id, Prefecture.all.map { |p| [p.name, p.id] } %>
+  </div>
+
+  <br>
+  <br>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+

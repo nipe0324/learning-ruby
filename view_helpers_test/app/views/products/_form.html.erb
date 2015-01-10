@@ -1,0 +1,43 @@
+<%= form_for(@product) do |f| %>
+  <% if @product.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+      <ul>
+      <% @product.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :lock_version %>
+  <%= hidden_field_tag "product[lock_version]", @product.lock_version %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :price %><br>
+    <%= f.number_field :price %>
+  </div>
+  <div class="field">
+    <%= f.label :rate %><br>
+    <%= f.radio_button :rate, 1 %> <%= f.label :rate_1, 1 %>
+    <%= f.radio_button :rate, 2 %> <%= f.label :rate_2, 2 %>
+    <%= f.radio_button :rate, 3 %> <%= f.label :rate_3, 3 %>
+    <%= f.radio_button :rate, 4 %> <%= f.label :rate_4, 4 %>
+    <%= f.radio_button :rate, 5 %> <%= f.label :rate_5, 5 %>
+  </div>
+  <div class="field">
+    <% Category.all.each do |category| %>
+      <%= check_box_tag "product[category_ids][]", category.id, false, id: "product_category_ids_#{category.id}" %>
+      <%= label_tag "product[category_ids][#{category.id}]", category.name %>
+    <% end %>
+  </div>
+  <div class="actions">
+    <%= f.submit "登録" %>
+    <%= submit_tag "検索" %>
+  </div>
+<% end %>

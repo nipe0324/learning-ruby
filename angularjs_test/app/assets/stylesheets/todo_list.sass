@@ -1,13 +1,4 @@
-.header
-  margin-bottom: 10px
-
-.sort-links
-  text-align: right
-
-  a.active
-    color: black
-
-form#new_task
+form#new_todo
   .input-group
     width: 100%
     display: inline-flex
@@ -32,19 +23,19 @@ form#new_task
     border-top-right-radius: 0
 
   &.completed
-    .task-description span
+    .todo-description span
       color: #a9a9a9
       text-decoration: line-through
 
-  .task-completed
+  .todo-completed
     display: inline-block
     vertical-align: top
     margin-top: 7px
 
-  .task-description
+  .todo-description
     width: 90%
     margin-left: 10px
     line-height: 2.45em
 
-  .task-buttons
+  .todo-buttons
     margin-top: 5px

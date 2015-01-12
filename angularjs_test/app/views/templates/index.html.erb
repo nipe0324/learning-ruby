@@ -1,4 +1,3 @@
-<!-- app/views/templates/index.html.erb -->
 <div class="container" ng-controller="TodoListCtrl" ng-init="init()">
   <h1>Todo リスト</h1>
 
@@ -8,23 +7,23 @@
       <span>{{list.name}}</span>
     </div>
 
-    <form id="new_task" ng-submit="addTask(taskDescription)">
+    <form id="new_todo" ng-submit="addTodo(todoDescription)">
       <div class="input-group">
-        <input type="text" id="taskDescription" class="form-control input-lg" autofocus="autofocus" maxlength="255" ng-model="taskDescription">
+        <input type="text" id="todoDescription" class="form-control input-lg" autofocus="autofocus" maxlength="255" ng-model="todoDescription">
         <button class="btn btn-success btn-lg" type="submit">追加</button>
       </div>
     </form>
 
     <ul class="list-group">
-      <li class="list-group-item" ng-repeat="task in list.tasks" ng-class="{completed: task.completed}">
-        <div class="task-completed">
+      <li class="list-group-item" ng-repeat="todo in list.todos" ng-class="{completed: task.completed}">
+        <div class="todo-completed">
           <input type="checkbox" ng-model="task.completed">
         </div>
-        <div class="task-description">
-          <span>{{task.description}}</span>
+        <div class="todo-description">
+          <span>{{todo.description}}</span>
         </div>
-        <div class="task-buttons pull-right">
-          <button class="btn btn-danger btn-xs pull-right" type="button" ng-click="deleteTask(task)">
+        <div class="todo-buttons pull-right">
+          <button class="btn btn-danger btn-xs pull-right" type="button" ng-click="deleteTodo(todo)">
             <span class="glyphicon glyphicon-ban-circle"></span>
           </button>
         </div>

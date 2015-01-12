@@ -15,9 +15,9 @@
     </form>
 
     <ul class="list-group">
-      <li class="list-group-item" ng-repeat="todo in list.todos" ng-class="{completed: task.completed}">
+      <li class="list-group-item" ng-repeat="todo in list.todos" ng-class="{completed: todo.completed}">
         <div class="todo-completed">
-          <input type="checkbox" ng-model="task.completed">
+          <input type="checkbox" ng-model="todo.completed" ng-click="toggleTodo(todo)">
         </div>
         <div class="todo-description">
           <span>{{todo.description}}</span>

@@ -1,0 +1,50 @@
+.header
+  margin-bottom: 10px
+
+.sort-links
+  text-align: right
+
+  a.active
+    color: black
+
+form#new_task
+  .input-group
+    width: 100%
+    display: inline-flex
+
+  .form-control:focus
+    z-index: 2
+
+  input[type=text]
+    height: auto
+    border-radius: 0
+
+  button[type=submit]
+    width: 140px
+    border-radius: 0
+
+.list-group-item
+  width: 100%
+  display: inline-flex
+
+  &:first-child
+    border-top-left-radius: 0
+    border-top-right-radius: 0
+
+  &.completed
+    .task-description span
+      color: #a9a9a9
+      text-decoration: line-through
+
+  .task-completed
+    display: inline-block
+    vertical-align: top
+    margin-top: 7px
+
+  .task-description
+    width: 90%
+    margin-left: 10px
+    line-height: 2.45em
+
+  .task-buttons
+    margin-top: 5px

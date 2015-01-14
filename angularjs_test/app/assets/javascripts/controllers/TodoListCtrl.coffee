@@ -1,14 +1,13 @@
 # コントローラーを定義する。今はこのように記載すると覚えておけば良い。
-angular.module('sampleApp').controller "TodoListCtrl", ($scope, TodoList, Todo) ->
+angular.module('sampleApp').controller "TodoListCtrl", ($scope, $routeParams, TodoList, Todo) ->
 
   # 初期データを用意するメソッド
   $scope.init = ->
     # Todoサービスクラスを作成
-    # TODO todo_listのidを動的に取得する
     @todoListService = new TodoList(serverErrorHandler)
-    @todoService     = new Todo(1, serverErrorHandler)
+    @todoService     = new Todo($routeParams.list_id, serverErrorHandler)
     # データを取得する(GET /api/todo_lists/:id => Api::TodoLists#show)
-    $scope.list = @todoListService.find(1)
+    $scope.list = @todoListService.find($routeParams.list_id)
 
 
   $scope.addTodo = (todoDescription) ->

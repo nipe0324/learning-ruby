@@ -1,0 +1,34 @@
+<%= form_for(@job) do |f| %>
+  <% if @job.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@job.errors.count, "error") %> prohibited this job from being saved:</h2>
+
+      <ul>
+      <% @job.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :name %>
+  <%= f.hidden_field :priority %>
+  <%= f.hidden_field :tempfile_path %>
+  <%= f.hidden_field :csv_file_name %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <p><%= @job.name %></p>
+  </div>
+  <div class="field">
+    <%= f.label :priority %><br>
+    <p><%= @job.priority %></p>
+  </div>
+  <div class="field">
+    <%= f.label :csv %><br>
+    <p><%= @job.csv_file_name %></p>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

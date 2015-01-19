@@ -6,6 +6,9 @@ angular.module('sampleApp').factory 'Todo', ($resource, $http) ->
         { update: { method: 'PUT' }})
       @errorHandler = errorHandler
 
+    all: (params)->
+      @service.query(params, (-> null), @errorHandler)
+
     create: (attrs) ->
       new @service(todo: attrs).$save ((todo) -> attrs.id = todo.id), @errorHandler
       attrs

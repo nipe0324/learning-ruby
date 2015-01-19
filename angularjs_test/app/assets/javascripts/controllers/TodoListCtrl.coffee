@@ -9,6 +9,18 @@ angular.module('sampleApp').controller "TodoListCtrl", ($scope, $routeParams, To
     # データを取得する(GET /api/todo_lists/:id => Api::TodoLists#show)
     $scope.list = @todoListService.find($routeParams.list_id)
 
+    # 画面表示時はundefinedのため初期値を設定しておく
+    $scope.descriptionCont = ""
+    $scope.completedTrue   = ""
+
+  $scope.search = ->
+    # Ransackに対応したparamsを送る
+    params = {
+      'q[description_cont]' : $scope.descriptionCont,
+      'q[completed_true]'   : $scope.completedTrue
+    }
+    $scope.list.todos = @todoService.all(params)
+
 
   $scope.addTodo = (todoDescription) ->
     # todoを追加する(POST /api/todo_lists/:todo_lsit_id/todos => Api::Todo#destroy)

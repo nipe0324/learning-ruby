@@ -1,0 +1,30 @@
+<h1>Listing Letters</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Delivered at</th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @letters.each do |letter| %>
+      <tr>
+        <td><%= letter.title %></td>
+        <td><%= letter.description %></td>
+        <td><%= letter.delivered_at %></td>
+        <td><%= link_to 'Deliver', deliver_letter_path(letter), method: :post %></td>
+        <td><%= link_to 'Show', letter %></td>
+        <td><%= link_to 'Edit', edit_letter_path(letter) %></td>
+        <td><%= link_to 'Destroy', letter, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Letter', new_letter_path %>

@@ -7,7 +7,7 @@ angular.module('sampleApp').controller "TodoListCtrl", ($scope, $routeParams, To
     @todoListService = new TodoList(serverErrorHandler)
     @todoService     = new Todo($routeParams.list_id, serverErrorHandler)
     # データを取得する(GET /api/todo_lists/:id => Api::TodoLists#show)
-    $scope.list = @todoListService.find($routeParams.list_id)
+    $scope.list = @todoListService.find($routeParams.list_id, (res)-> $scope.totalTodos = res.totalTodos)
 
     # 画面表示時はundefinedのため初期値を設定しておく
     $scope.descriptionCont = ""
@@ -17,10 +17,10 @@ angular.module('sampleApp').controller "TodoListCtrl", ($scope, $routeParams, To
     # Ransackに対応したparamsを送る
     params = {
       'q[description_cont]' : $scope.descriptionCont,
-      'q[completed_true]'   : $scope.completedTrue
+      'q[completed_true]'   : $scope.completedTrue,
+      'page'                : $scope.currentPage
     }
-    $scope.list.todos = @todoService.all(params)
-
+    $scope.list = @todoService.all(params, (res)-> $scope.totalTodos = res.totalTodos)
 
   $scope.addTodo = (todoDescription) ->
     # todoを追加する(POST /api/todo_lists/:todo_lsit_id/todos => Api::Todo#destroy)

@@ -1,4 +1,6 @@
 class Todo < ActiveRecord::Base
+  paginates_per 10
+
   belongs_to :todo_list
 
   validates :todo_list_id, presence: true

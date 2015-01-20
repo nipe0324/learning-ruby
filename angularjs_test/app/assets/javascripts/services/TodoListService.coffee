@@ -10,7 +10,7 @@ angular.module('sampleApp').factory 'TodoList', ($resource, $http) ->
       @service.query((-> null), @errorHandler)
 
     find: (id, successHandler) ->
-      @service.get(id: id, ((list)->
+      @service.get(id: id,((list)->
         successHandler?(list)
         list),
         @errorHandler)

@@ -71,6 +71,9 @@ GEM
       railties (>= 3.1.0)
       turbolinks
     json (1.8.2)
+    kaminari (0.16.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
     mail (2.6.3)
@@ -166,6 +169,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   jquery-turbolinks
+  kaminari
   rails (= 4.2.0)
   ransack
   sass-rails (~> 5.0)

@@ -3,7 +3,9 @@ module Api
     before_action :set_todo_list
 
     def index
-      render json: @todo_list.todos.ransack(params[:q]).result
+      @q            = @todo_list.todos.ransack(params[:q]).result # ransackの検索
+      @todos        = @q.page(params[:page])  # kaminariのページネーション
+      @total_todos  = @q.count
     end
 
     def create

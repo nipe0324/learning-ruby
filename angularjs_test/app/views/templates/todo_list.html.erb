@@ -32,7 +32,9 @@
   <div class="panel panel-success">
 
     <div class="panel-heading">
-      <span>{{list.name}}</span>
+      <editablespan
+        model="list.name"
+        on-ready="listNameEdited(list.name)"></editablespan>
     </div>
 
     <form id="new_todo" ng-submit="addTodo(todoDescription)">
@@ -48,7 +50,9 @@
           <input type="checkbox" ng-model="todo.completed" ng-click="toggleTodo(todo)">
         </div>
         <div class="todo-description">
-          <span>{{todo.description}}</span>
+          <editablespan
+            model="todo.description"
+            on-ready="todoDescriptionEdited(todo)"></editablespan>
         </div>
         <div class="todo-buttons pull-right">
           <button class="btn btn-danger btn-xs pull-right" type="button" ng-click="deleteTodo(todo)">

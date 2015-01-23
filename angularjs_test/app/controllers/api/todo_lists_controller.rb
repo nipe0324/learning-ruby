@@ -1,6 +1,6 @@
 module Api
   class TodoListsController < ApplicationController
-    before_action :set_todo_list, only: [:show, :destroy]
+    before_action :set_todo_list, only: [:show, :update, :destroy]
 
     def index
       render json: TodoList.all
@@ -12,6 +12,11 @@ module Api
     def create
       list = TodoList.create!(todo_list_params)
       render json: list, status: 201
+    end
+
+    def update
+      @todo_list.update(todo_list_params)
+      render nothing: true
     end
 
     def destroy

@@ -1,3 +1,4 @@
+json.id    @todo_list.id
 json.name  @todo_list.name
 json.todos @todo_list.todos.page(1) do |todo|
   json.id          todo.id

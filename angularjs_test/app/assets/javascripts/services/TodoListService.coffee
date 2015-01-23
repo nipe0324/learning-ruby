@@ -19,5 +19,8 @@ angular.module('sampleApp').factory 'TodoList', ($resource, $http) ->
       new @service(todo_list: attrs).$save ((list) -> attrs.id = list.id), @errorHandler
       attrs
 
+    update: (list, attrs) ->
+      new @service(todo_list: attrs).$update {id: list.id}, (-> null), @errorHandler
+
     delete: (list) ->
       new @service().$delete { id: list.id }, (-> null), @errorHandler

@@ -30,6 +30,9 @@ gem 'ransack'
 # ページネーション機能を追加
 gem 'kaminari'
 
+# Sort todo's position manualy
+gem 'acts_as_list'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 

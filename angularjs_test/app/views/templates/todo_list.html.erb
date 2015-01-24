@@ -44,12 +44,12 @@
       </div>
     </form>
 
-    <ul class="list-group">
-      <li class="list-group-item" ng-repeat="todo in list.todos" ng-class="{completed: todo.completed}">
+    <ul data-as-sortable="sortListeners"data-ng-model="list.todos" class="list-group">
+      <li ng-repeat="todo in list.todos" ng-class="{completed: todo.completed}" data-as-sortable-item class="list-group-item">
         <div class="todo-completed">
           <input type="checkbox" ng-model="todo.completed" ng-click="toggleTodo(todo)">
         </div>
-        <div class="todo-description">
+        <div class="todo-description" data-as-sortable-item-handle>
           <editablespan
             model="todo.description"
             on-ready="todoDescriptionEdited(todo)"></editablespan>

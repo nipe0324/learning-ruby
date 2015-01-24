@@ -4,5 +4,6 @@ json.todos @todo_list.todos.page(1) do |todo|
   json.id          todo.id
   json.description todo.description
   json.completed   todo.completed
+  json.position    todo.position
 end
 json.totalTodos  @todo_list.todos.count

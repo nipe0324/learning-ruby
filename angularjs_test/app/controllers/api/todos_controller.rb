@@ -34,7 +34,7 @@ module Api
     end
 
     def todo_params
-      params.require(:todo).permit(:description, :completed)
+      params.require(:todo).permit(:description, :completed, :target_position)
     end
 
   end

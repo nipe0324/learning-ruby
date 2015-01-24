@@ -1,5 +1,5 @@
 class TodoList < ActiveRecord::Base
-  has_many :todos, -> { order "created_at DESC" }, dependent: :destroy
+  has_many :todos, -> { order "position" }, dependent: :destroy
 
   validates :name, presence: true
 end

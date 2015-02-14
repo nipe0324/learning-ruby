@@ -41,12 +41,6 @@ ul, ol {
   list-style-type:none;
 }
 
-/* デフォルトリンク色の設定 */
-a,
-a:-webkit-any-link {
-  text-decoration: none;
-}
-
 
 /*--------------------------
 
@@ -108,6 +102,11 @@ table {
   th, td {
     padding: 1px 10px;
   }
+}
+
+.alert {
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 #error_explanation {

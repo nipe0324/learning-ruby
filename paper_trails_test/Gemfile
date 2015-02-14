@@ -84,3 +84,5 @@ group :production do
   gem 'mysql2'
   gem 'unicorn'
 end
+
+gem 'paper_trail', '~> 4.0.0.bata'

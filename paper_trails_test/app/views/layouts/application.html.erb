@@ -9,6 +9,10 @@
 <body class='<%= "#{controller.controller_name}" %>'>
 <div id="wrap">
   <div id="main">
+    <% flash.each do |name, msg| %>
+      <%= content_tag :div, raw(msg), :id => name, :class => "alert" %>
+    <% end %>
+
     <%= yield %>
   </div>
 </div>

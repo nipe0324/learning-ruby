@@ -1,0 +1,29 @@
+<%= form_for(@user) do |f| %>
+  <% if @user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+      <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name, "名前" %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :skill_list, "スキル・特技" %><br>
+    <%= text_field_tag 'user[skill_list]', @user.skill_list.join(','), "data-role" => "tagsinput" %>
+  </div>
+  <div class="field">
+    <%= f.label :interest_list, "興味・関心" %><br>
+    <%= text_field_tag 'user[interest_list]', @user.interest_list.join(','), "data-role" => "tagsinput" %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

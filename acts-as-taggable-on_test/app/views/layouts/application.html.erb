@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ActsAsTaggableOnTest</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <%= csrf_meta_tags %>
+</head>
+<body class='<%= "#{controller.controller_name}" %>'>
+<div id="wrap">
+  <div id="main">
+    <%= yield %>
+  </div>
+</div>
+</body>
+</html>

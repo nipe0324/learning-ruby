@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @user.name %>
+</p>
+
+<p>
+  <strong>スキル・特技:</strong>
+  <%= render 'users/tag_list', tag_list: @user.skill_list %><br />
+  <%= render 'users/related_users', users: @user.find_related_skills %>
+</p>
+
+<p>
+  <strong>興味・関心:</strong>
+  <%= render 'users/tag_list', tag_list: @user.interest_list %><br />
+  <%= render 'users/related_users', users: @user.find_related_interests %>
+</p>
+
+<%= link_to 'Edit', edit_user_path(@user) %> |
+<%= link_to 'Back', users_path %>

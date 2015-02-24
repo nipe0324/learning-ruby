@@ -1,0 +1,119 @@
+// カラー変数
+$baseBlack:     #333;
+$baseGray:      #aaa;
+$baseLightGray: #eee;
+$baseLightGreen: #5cb85c;
+
+/*-----------------------------
+
+　リセットCSS + サイト共通設定
+
+------------------------------*/
+body,
+h1,h2,h3,h4,h5,h6,
+p,ul,ol,dl,dt,dd,li,
+table,th,td,
+form,select,option,input
+address,pre,strong,em,iframe,img{
+  margin:0;
+  padding:0;
+  font-size:100%;
+  border:0;
+}
+
+/* デフォルト文字設定 */
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+
+  color: $baseBlack;
+  font-family: "Gotham Narrow SSm",Arial,"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro",Osaka,"メイリオ",Meiryo,"ＭＳ Ｐゴシック","MS PGothic",sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+
+/* リストのマーカーを非表示 */
+ul, ol {
+  list-style-type:none;
+}
+
+/* デフォルトリンク色の設定 */
+a,
+a:-webkit-any-link {
+  text-decoration: none;
+}
+
+
+/*--------------------------
+
+　レイアウト
+
+---------------------------*/
+body {
+  border-top: $baseGray 1px solid;
+  background-color: $baseLightGreen !important;
+}
+
+/* ページ全体のラッパー
+---------------------------*/
+#wrap {
+  position: relative;
+  width: 100%;
+  height: auto !important;
+  height: 100%;
+  min-height: 100%;
+}
+
+/* メインコンテンツ
+---------------------------*/
+#main {
+  width: 800px;
+  height: 100%;
+
+  padding: 10px;
+
+  margin: 30px auto;
+
+  background-color: white;
+  border-radius: 5px;
+
+
+  h1 {
+    font-size: 200%;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid $baseLightGreen;
+  }
+}
+
+
+/*-----------------------------
+
+　共通コンポーネント
+
+------------------------------*/
+
+table {
+  th, td {
+    padding: 1px 10px;
+  }
+}
+
+#error_explanation {
+  border-radius: 3px;
+  ul {
+    li {
+      padding: 1px 0px;
+      list-style: none !important;
+    }
+  }
+}
+
+.field_with_errors {
+  border-radius: 3px;
+  color: white;
+}

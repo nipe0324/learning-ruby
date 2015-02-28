@@ -1,0 +1,46 @@
+// カラー変数
+$baseBlack:     #333;
+$baseGray:      #aaa;
+$baseLightGray: #eee;
+$baseLightGreen: #5cb85c;
+
+/*--------------------------
+
+　レイアウト
+
+---------------------------*/
+body {
+  background-color: $baseLightGreen !important;
+}
+
+/* ページ全体のラッパー
+---------------------------*/
+#wrap {
+  position: relative;
+  width: 100%;
+  height: auto !important;
+  height: 100%;
+  min-height: 100%;
+}
+
+/* メインコンテンツ
+---------------------------*/
+#main {
+  width: 800px;
+  height: 100%;
+
+  padding: 10px;
+
+  margin: 30px auto;
+
+  background-color: white;
+  border-radius: 5px;
+
+
+  h1 {
+    font-size: 200%;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid $baseLightGreen;
+  }
+}

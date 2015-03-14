@@ -40,3 +40,4 @@ gem 'spring',        group: :development
 
 gem 'devise'
 gem 'omniauth-twitter'
+gem 'omniauth-facebook'

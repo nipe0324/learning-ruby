@@ -19,5 +19,6 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # こうすることで、様々なメソッド名で同じ処理を実装することができます。
   # OAuthの処理はほとんど同じためこのようにしています。
   # 例えば、Facebookに対応する場合、alias_method :facebook, :allだけですみます
-  alias_method :twitter, :all
+  alias_method :twitter,  :all
+  alias_method :facebook, :all
 end

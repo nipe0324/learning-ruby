@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable, omniauth_providers: [:twitter]
+         :omniauthable, omniauth_providers: [:twitter, :facebook]
 
   validates :username, presence: true, uniqueness: true
 
@@ -15,8 +15,13 @@ class User < ActiveRecord::Base
       # auth.uidには twitterアカウントに基づいた個別のIDが入っている
       # first_or_createメソッドが自動でproviderとuidを設定してくれるので、
       # ここでは設定は必要ない
-      user.username = auth.info.nickname # twitterで利用している名前が入る
-      user.email = auth.info.email # twitterの場合入らない
+      if auth.provider == "twitter"
+        user.username = auth.info.nickname # twitterで利用している名前が入る
+        # user.email = auth.info.email     # twitterの場合入らない
+      elsif auth.provider == "facebook"
+        user.username = auth.info.name     # facebooで利用している名前が入る
+        user.email = auth.info.email
+      end
     end
   end
 

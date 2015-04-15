@@ -1,0 +1,2 @@
+module OmakesHelper
+end

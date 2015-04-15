@@ -1,0 +1,29 @@
+<h1>Omake</h1>
+
+<div id="content">
+</div>
+
+<a href="javascript:void(0)" class="js_change_omake">変更</a>
+
+<div id="dialog" title="Basic Dialog" style="display:none"></div>
+
+
+<script type="text/x-handlebars-template" id="content-template">
+<ui>
+  <li>ID:  <span class="js_id">{{id}}</span></li>
+  <li>名前: <span class="js_name">{{name}}</span></li>
+  <li>値段: <span class="js_price">{{price}}</span></li>
+  <li>重さ: <span class="js_weight">{{weight}}</span></li>
+</ui>
+</script>
+
+<script type="text/x-handlebars-template" id="dialog-template">
+{{#each omakes}}
+<div>
+  <span><a href="javascript:void(0)" no="{{id}}" class="js_select_item">{{id}}</a></span>
+  <span>{{name}}</span>
+  <span>{{price}}</span>
+  <span>{{weight}}kg</span>
+</div>
+{{/each}}
+</script>

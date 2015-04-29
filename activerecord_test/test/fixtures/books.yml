@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  isbn: MyString
+  name: MyString
+  name_kana: MyString
+  price: 1
+  category_id: 1
+
+two:
+  isbn: MyString
+  name: MyString
+  name_kana: MyString
+  price: 1
+  category_id: 1

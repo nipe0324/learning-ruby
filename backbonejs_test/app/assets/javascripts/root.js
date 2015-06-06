@@ -20,10 +20,18 @@ $(document).ready(function() {
   var ListIndex = Backbone.View.extend({
     template: _.template($('#list-index-tpl').html()),
 
+    initialize: function(options) {
+      this.$rootEl = options.$rootEl;
+      this.collection = new Lists();
+      this.collection.fetch();
+
+      this.listenTo(this.collection, 'sync', this.render);
+    },
     render: function() {
       this.$el.html(this.template({
         lists: this.collection
       }));
+      this.$rootEl.html(this.$el);
       return this;
     }
   });
@@ -31,10 +39,22 @@ $(document).ready(function() {
   var TodoIndex = Backbone.View.extend({
     template: _.template($('#todo-index-tpl').html()),
 
+    initialize: function(options) {
+      this.$rootEl = options.$rootEl;
+      this.listId = options.listId;
+      this.collection = new Todos();
+      this.collection.fetch({
+        data: { list_id: this.listId }
+      });
+
+      this.listenTo(this.collection, 'sync', this.render);
+    },
+
     render: function() {
       this.$el.html(this.template({
         todos: this.collection
       }));
+      this.$rootEl.html(this.$el);
       return this;
     }
   })
@@ -51,31 +71,16 @@ $(document).ready(function() {
 
     index: function() {
       console.log('index');
-      var self = this;
-      var lists = new Lists();
-      lists.fetch({
-        success: function(model, res) {
-          var listIndex = new ListIndex({
-            collection: lists
-          });
-          self.$rootEl.html(listIndex.render().$el);
-        }
+      new ListIndex({
+        $rootEl: this.$rootEl
       });
     },
 
     show: function(id) {
       console.log('show');
-      var self = this;
-      var todos = new Todos();
-
-      todos.fetch({
-        data: { list_id: id },
-        success: function(model, res) {
-          var todoIndex = new TodoIndex({
-            collection: todos
-          });
-          self.$rootEl.html(todoIndex.render().$el);
-        }
+      new TodoIndex({
+        $rootEl: this.$rootEl,
+        listId: id
       });
     }
   });

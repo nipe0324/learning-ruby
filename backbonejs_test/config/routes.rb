@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
+  resources :products
   namespace :api do
     resources :lists
     resources :todos
   end
-
+  get 'about' => 'root#about'
   root 'root#index'
 
   # The priority is based upon order of creation: first created -> highest priority.

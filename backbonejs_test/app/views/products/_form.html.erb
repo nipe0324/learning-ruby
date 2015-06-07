@@ -1,0 +1,47 @@
+<%= form_for(@product) do |f| %>
+  <% if @product.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+      <ul>
+      <% @product.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <select>
+      <option value="1">Value1</option>
+      <option value="2">Value2</option>
+      <option value="3">Value3</option>
+    </select>
+  </div>
+  <div class="field">
+    <input type="checkbox"> check
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+$(window).ready(function(){
+  $('input, select').on('keyup change', function(){
+    // console.log('change');
+    $(window).on('beforeunload', function() {
+      return "このページを離れると、入力したデータが削除されます。本当に移動しますか。";
+    });
+  })
+
+  $('a, input[type=submit]').on('click', function(e) {
+    // console.log('normal move');
+    $(window).off('beforeunload');
+  });
+});
+</script>

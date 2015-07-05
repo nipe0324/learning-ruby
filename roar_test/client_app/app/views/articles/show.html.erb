@@ -1,4 +1,12 @@
+<h2>Article Detail</h2>
+
 <p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Artcile ID:</strong>
+  <%= @article.id %>
+</p>
+
 
 <p>
   <strong>Title:</strong>
@@ -9,6 +17,20 @@
   <strong>Content:</strong>
   <%= @article.content %>
 </p>
+
+
+<p>
+  <strong>Remote Tweet Id:</strong>
+  <%= @article.remote_tweet_id %>
+</p>
+
+<h2>Article's Tags Details</h2>
+
+<ul>
+  <% @article.tags.each do |tag| %>
+    <li>Tag: <%= "ID: #{tag.id}, Remote Tag ID: #{tag.remote_tag_id}, #{tag.name}" %></li>
+  <% end %>
+</ul>
 
 <%= link_to 'Edit', edit_article_path(@article) %> |
 <%= link_to 'Back', articles_path %>

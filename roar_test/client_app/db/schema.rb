@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150627161128) do
+ActiveRecord::Schema.define(version: 20150627125018) do
 
   create_table "article_tags", force: :cascade do |t|
     t.integer  "article_id"
@@ -26,15 +26,16 @@ ActiveRecord::Schema.define(version: 20150627161128) do
   create_table "articles", force: :cascade do |t|
     t.string   "title"
     t.text     "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer  "tweet_id"
+    t.integer  "remote_tweet_id"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "tags", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "remote_tag_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
 end

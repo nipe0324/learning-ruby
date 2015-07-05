@@ -21,9 +21,9 @@
         <td><%= article.id %></td>
         <td><%= article.title %></td>
         <td><%= article.content %></td>
-        <td><%= article.tweet_id %></td>
+        <td><%= article.remote_tweet_id %></td>
         <td>
-          <% tweet = @tweets.find { |t| t.id == article.tweet_id } %>
+          <% tweet = @tweets.find { |t| t.id == article.remote_tweet_id } %>
           <%= "#{tweet.id}:#{tweet.content}" %>
         </td>
         <td>

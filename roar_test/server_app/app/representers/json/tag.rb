@@ -2,12 +2,14 @@ module Json
   class Tag < OpenStruct
     module Representer
       include Roar::JSON
-      # JSON-API
-      # include Roar::JSON::JSONAPI
-      # type :tag
 
       property :id
       property :name
+    end
+
+    module Server
+      include Roar::JSON
+      include Representer
     end
   end
 end

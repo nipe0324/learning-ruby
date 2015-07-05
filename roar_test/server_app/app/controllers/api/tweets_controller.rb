@@ -39,45 +39,45 @@ module Api
 
     # POST /tweets
     def create
-      @tweet = Tweet.new.extend(::Json::Tweet::Representer).from_json(request.body.read)
+      tweet = Tweet.new.extend(::Json::Tweet::Server).from_json(request.body.read)
       # from_hashも使える
-      # @tweet = Tweet.new.extend(::Json::Tweet::Representer).from_hash(tweet_params)
+      # tweet = Tweet.new.extend(::Json::Tweet::Server).from_hash(tweet_params)
 
-      if @tweet.save
-        render json: @tweet
+      if tweet.save
+        render json: tweet
       else
-        render json: @tweet
+        render json: tweet.errors.full_messages
       end
     end
 
     # PATCH/PUT /tweets/1
     def update
-      @tweet = Tweet.find(params[:id])
-      @tweet.extend(::Json::Tweet::Representer).from_json(request.body.read)
+      tweet = Tweet.find(params[:id])
+      tweet.extend(::Json::Tweet::Representer).from_json(request.body.read)
       # from_hashも使える
-      # @tweet.extend(::Json::Tweet::Representer).from_hash(tweet_params)
+      # tweet.extend(::Json::Tweet::Representer).from_hash(tweet_params)
 
-      if @tweet.save
-        render json: @tweet
+      if tweet.save
+        render json: tweet
       else
-        render json: @tweet
+        render json: tweet.errors.full_messages
       end
     end
 
     # DELETE /tweets/1
     def destroy
-      @tweet = Tweet.find(params[:id])
-      if @tweet.destroy
+      tweet = Tweet.find(params[:id])
+      if tweet.destroy
         head :ok
       else
-        render json: @tweet
+        render json: tweet
       end
     end
 
     private
       # Only allow a trusted parameter "white list" through.
       def tweet_params
-        params.require(:tweet).permit(:content)
+        params.require(:tweet).permit(:content, tag_ids: [])
       end
   end
 end

@@ -7,25 +7,28 @@ class ArticlesController < ApplicationController
 
   # GET /articles/1
   def show
-    @article = Article.includes(:tags).find(params[:id])
+    @article = Article.find(params[:id])
+    @tweet = ::Json::Tweet::Client.build.show(@article.remote_tweet_id)
   end
 
   # GET /articles/new
   def new
     @article = Article.new
+    @tags = ::Json::Tag::Client.build_collection.all
   end
 
   # GET /articles/1/edit
   def edit
     @article = Article.find(params[:id])
+    @tweet = ::Json::Tweet::Client.build.show(@article.remote_tweet_id)
+    @tags = ::Json::Tag::Client.build_collection.all
   end
 
   # POST /articles
   def create
     @article = Article.new(article_params)
 
-    @tweet = ::Json::Tweet::Client.build
-    @tweet.from_hash(@article.attributes.merge('tags' => @article.tags.map(&:attributes)))
+    @tweet = ::Json::Tweet::Client.build.from_hash(params[:article])
     @tweet.create
     @article.remote_tweet_id = @tweet.remote_tweet_id
 
@@ -40,7 +43,7 @@ class ArticlesController < ApplicationController
   def update
     @article = Article.find(params[:id])
 
-    @tweet = ::Json::Tweet::Client.build.from_hash(article_params)
+    @tweet = ::Json::Tweet::Client.build.from_hash(params[:article])
     @tweet.update(@article.remote_tweet_id)
 
     if @article.update(article_params)
@@ -65,6 +68,6 @@ class ArticlesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def article_params
-      params.require(:article).permit(:title, :content, tag_ids: [] )
+      params.require(:article).permit(:title, :content, tags: [])
     end
 end

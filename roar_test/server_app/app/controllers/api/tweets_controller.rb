@@ -5,7 +5,7 @@ module Api
     # GET /tweets
     def index
       @tweets = Tweet.all
-      render json: @tweets.extend(::Json::Tweet::Representer.for_collection)
+      render json: @tweets.extend(::Json::Tweet::Server.for_collection)
         # [
         #   {
         #     "id": 1,
@@ -53,7 +53,7 @@ module Api
     # PATCH/PUT /tweets/1
     def update
       tweet = Tweet.find(params[:id])
-      tweet.extend(::Json::Tweet::Representer).from_json(request.body.read)
+      tweet.extend(::Json::Tweet::Server).from_json(request.body.read)
       # from_hashも使える
       # tweet.extend(::Json::Tweet::Representer).from_hash(tweet_params)
 

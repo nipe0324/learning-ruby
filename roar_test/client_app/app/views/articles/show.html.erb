@@ -24,11 +24,22 @@
   <%= @article.remote_tweet_id %>
 </p>
 
-<h2>Article's Tags Details</h2>
+<h2>Tweet Detail</h2>
+
+<p>
+  <strong>ID:</strong>
+  <%= @tweet.id %>
+</p>
+
+<p>
+  <strong>Content:</strong>
+  <%= @tweet.content %>
+</p>
+
 
 <ul>
-  <% @article.tags.each do |tag| %>
-    <li>Tag: <%= "ID: #{tag.id}, Remote Tag ID: #{tag.remote_tag_id}, #{tag.name}" %></li>
+  <% @tweet.tags.each do |tag| %>
+    <li>Tag: <%= "#{tag.id}: #{tag.name}" %></li>
   <% end %>
 </ul>
 

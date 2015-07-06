@@ -20,9 +20,10 @@
     <%= f.text_area :content %>
   </div>
   <div class="field">
-    <% Tag.all.each do |tag| %>
-      <%= check_box_tag "article[tag_ids][]", tag.id, @article.tag_ids.include?(tag.id), id: dom_id(tag) %>
-      <%= label_tag dom_id(tag), tag.name %><br />
+    <% tweet_ids = @tweet.try(:tags).try(:map, &:id) %>
+    <% @tags.each do |tag| %>
+      <%= check_box_tag "article[tags][][id]", tag.id, tweet_ids.try(:include?, tag.id), id: "tag_#{tag.id}" %>
+      <%= label_tag "tag_#{tag.id}", tag.name %><br />
     <% end %>
   </div>
   <div class="actions">

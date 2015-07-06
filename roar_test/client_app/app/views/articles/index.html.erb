@@ -8,9 +8,9 @@
       <th>ID</th>
       <th>Title</th>
       <th>Content</th>
-      <th>Tweet ID</th>
-      <th>Remote Tweet</th>
-      <th>Remote Tags</th>
+      <th>[Remote] Tweet ID</th>
+      <th>[Remote] Tweet</th>
+      <th>[Remote] Tags</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -24,7 +24,7 @@
         <td><%= article.remote_tweet_id %></td>
         <td>
           <% tweet = @tweets.find { |t| t.id == article.remote_tweet_id } %>
-          <%= "#{tweet.id}:#{tweet.content}" %>
+          <%= tweet.content %>
         </td>
         <td>
           <%= tweet.tags.map(&:name).join(", ") %>

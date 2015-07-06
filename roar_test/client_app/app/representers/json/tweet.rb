@@ -12,6 +12,15 @@ module Json
       collection :tags, class: ::Json::Tag, extend: ::Json::Tag::Representer
     end
 
+    # only server side
+    # module Server
+    #   include Roar::JSON
+    #   include Representer
+    #
+    #   collection :tags, class: ::Tag, extend: ::Json::Tag::Server
+    # end
+
+    # only client side
     module Client
       include Roar::JSON
       include Representer

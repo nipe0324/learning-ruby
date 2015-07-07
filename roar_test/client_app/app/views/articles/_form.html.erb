@@ -20,11 +20,18 @@
     <%= f.text_area :content %>
   </div>
   <div class="field">
-    <% tweet_ids = @tweet.try(:tags).try(:map, &:id) %>
-    <% @tags.each do |tag| %>
-      <%= check_box_tag "article[tags][][id]", tag.id, tweet_ids.try(:include?, tag.id), id: "tag_#{tag.id}" %>
-      <%= label_tag "tag_#{tag.id}", tag.name %><br />
-    <% end %>
+    <div class="tags">
+      <% tweet_ids = @tweet.try(:tags).try(:map, &:id) %>
+      <% @tags.each do |tag| %>
+        <%= check_box_tag "article[tags][][id]", tag.id, tweet_ids.try(:include?, tag.id), id: "tag_#{tag.id}" %>
+        <%= label_tag "tag_#{tag.id}", tag.name %><br />
+      <% end %>
+    </div>
+    <div>
+      New Tag:
+      <%= text_field_tag '', '', id: 'new_tag_name' %>
+      <%= link_to 'Add New Tag', '#', id: 'new_tag_btn' %>
+    </div>
   </div>
   <div class="actions">
     <%= f.submit %>

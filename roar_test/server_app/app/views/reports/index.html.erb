@@ -1,0 +1,18 @@
+<h1>DB Report</h1>
+
+<h2>Tweet List</h2>
+
+<ul>
+  <% @tweets.each do |tweet| %>
+    <li><%= "#{tweet.id}: #{tweet.content} - #{tweet.tags.map(&:id).join(',')}" %></li>
+  <% end %>
+</ul>
+
+
+<h2>Tag List</h2>
+
+<ul>
+  <% @tags.each do |tag| %>
+    <li><%= "#{tag.id}: #{tag.name}" %></li>
+  <% end %>
+</ul>

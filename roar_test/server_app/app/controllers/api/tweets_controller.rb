@@ -26,7 +26,7 @@ module Api
     # GET /tweets/1
     def show
       @tweet = Tweet.find(params[:id])
-      render json: @tweet.extend(::Json::Tweet::Representer)
+      render json: @tweet.extend(::Json::Tweet::Server)
         # {
         #   "id": 1,
         #   "content": "tweet 1",

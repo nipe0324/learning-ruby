@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141108051310) do
+ActiveRecord::Schema.define(version: 20150709162331) do
 
-  create_table "posts", force: true do |t|
-    t.string   "title"
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "articles", force: :cascade do |t|
+    t.integer  "status",     limit: 1, default: 0, null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
   end
+
+  add_index "articles", ["status"], name: "index_articles_on_status"
 
 end

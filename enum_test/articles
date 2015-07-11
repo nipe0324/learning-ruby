@@ -1,0 +1,1 @@
+SELECT sql FROM   (SELECT sql sql, type type, tbl_name tbl_name, name name, rowid x     FROM sqlite_master UNION ALL   SELECT sql, type, tbl_name, name, rowid FROM sqlite_temp_master) WHERE lower(tbl_name) LIKE shellstatic()  AND type!='meta' AND sql NOTNULL ORDER BY rowid

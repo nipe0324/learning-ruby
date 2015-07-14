@@ -1,0 +1,62 @@
+
+### td-agent.conf
+
+```
+## rails source
+<source>
+  type forward
+  port 24224
+  tag rails.log
+</source>
+
+<match rails.log>
+  type parser
+  key_name messages
+  format json
+  tag rails.json
+</match>
+
+## match tag=rails.** and dump to console
+<match rails.json>
+  type stdout
+</match>
+
+<match rails.json>
+  type bigquery
+
+  method insert
+
+  auth_method private_key
+  email 981787091301-ja2omv67m4lltcpmb3gfogshl4s41udf@developer.gserviceaccount.com
+  private_key_path /etc/td-agent/sandbox-2baa4a064d33.p12
+
+  project sandbox-1006
+  dataset fluentd_test
+  table rails_log
+
+  schema_path /etc/td-agent/schema.json
+</match>
+
+## live debugging agent
+<source>
+ type debug_agent
+ bind 127.0.0.1
+ port 24230
+</source>
+```
+
+### schema.json
+
+```
+[
+  { "name": "method", "type": "STRING" },
+  { "name": "path", "type": "STRING" },
+  { "name": "format", "type": "STRING" },
+  { "name": "controller", "type": "STRING" },
+  { "name": "action", "type": "STRING" },
+  { "name": "status", "type": "INTEGER" },
+  { "name": "duration", "type": "FLOAT" },
+  { "name": "view", "type": "FLOAT" },
+  { "name": "db", "type": "FLOAT" }
+]
+```

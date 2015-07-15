@@ -27,8 +27,8 @@
   method insert
 
   auth_method private_key
-  email 981787091301-ja2omv67m4lltcpmb3gfogshl4s41udf@developer.gserviceaccount.com
-  private_key_path /etc/td-agent/sandbox-2baa4a064d33.p12
+  email xxxxxxxxxxxxxxxx@developer.gserviceaccount.com
+  private_key_path ./xxxxxx.p12
 
   project sandbox-1006
   dataset fluentd_test

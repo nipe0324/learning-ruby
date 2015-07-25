@@ -1,0 +1,6 @@
+/cookbooks/
+
+
+synced_folder/*
+
+.vagrant

@@ -1,0 +1,14 @@
+{
+  "name":        "local-development",
+  "description": "local virtual machine development environment",
+  "chef_type":   "environment",
+  "json_class":  "Chef::Environment",
+  "default_attributes": {
+    "user": "vagrant",
+    "ruby-env": {
+      "user":    "vagrant",
+      "group":   "vagrant"
+    }
+  },
+  "override_attributes": {}
+}

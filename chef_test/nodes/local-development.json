@@ -1,0 +1,9 @@
+{
+  "environment": "local-development",
+  "run_list": [
+    "role[base]",
+    "role[web]",
+    "role[db]",
+    "role[cache]"
+  ]
+}

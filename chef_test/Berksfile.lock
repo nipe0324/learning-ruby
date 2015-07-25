@@ -1,0 +1,77 @@
+DEPENDENCIES
+  git
+  imagemagick
+  nginx
+  nodejs
+  postgresql
+  redis
+  ruby-env
+    path: site-cookbooks/ruby-env
+  ruby_build
+  selinux
+  sudo
+  td-agent
+
+GRAPH
+  7-zip (1.0.2)
+    windows (>= 1.2.2)
+  apt (2.7.0)
+  ark (0.9.0)
+    7-zip (>= 0.0.0)
+    windows (>= 0.0.0)
+  bluepill (2.3.1)
+    rsyslog (>= 0.0.0)
+  build-essential (2.2.3)
+  chef-sugar (3.1.1)
+  chef_handler (1.2.0)
+  dmg (2.2.2)
+  git (4.2.3)
+    build-essential (>= 0.0.0)
+    dmg (>= 0.0.0)
+    windows (>= 0.0.0)
+    yum-epel (>= 0.0.0)
+  homebrew (1.13.0)
+    build-essential (>= 2.1.2)
+  imagemagick (0.2.3)
+  install_from (3.0.4)
+  metachef (3.0.4)
+  nginx (2.7.6)
+    apt (~> 2.2)
+    bluepill (~> 2.3)
+    build-essential (~> 2.0)
+    ohai (~> 2.0)
+    runit (~> 1.2)
+    yum-epel (~> 0.3)
+  nodejs (2.4.0)
+    apt (>= 0.0.0)
+    ark (>= 0.0.0)
+    build-essential (>= 0.0.0)
+    homebrew (>= 0.0.0)
+    yum-epel (>= 0.0.0)
+  ohai (2.0.1)
+  openssl (4.0.0)
+    chef-sugar (>= 0.0.0)
+  packagecloud (0.0.19)
+  postgresql (3.4.20)
+    apt (>= 1.9.0)
+    build-essential (>= 0.0.0)
+    openssl (~> 4.0.0)
+  redis (3.0.4)
+    install_from (>= 0.0.0)
+    metachef (>= 0.0.0)
+    runit (>= 0.0.0)
+  rsyslog (2.0.0)
+  ruby-env (0.1.0)
+  ruby_build (0.8.0)
+  runit (1.7.2)
+    packagecloud (>= 0.0.0)
+  selinux (0.9.0)
+  sudo (2.7.2)
+  td-agent (2.1.0)
+    apt (>= 0.0.0)
+    yum (>= 0.0.0)
+  windows (1.37.0)
+    chef_handler (>= 0.0.0)
+  yum (3.6.3)
+  yum-epel (0.6.2)
+    yum (~> 3.2)

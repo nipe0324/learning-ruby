@@ -1,0 +1,29 @@
+# == Schema Information
+#
+# Table name: categories
+#
+#  id         :integer          not null, primary key
+#  name       :string
+#  name_kana  :string
+#  parent1    :integer
+#  parent2    :integer
+#  similar    :string
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  name_kana: MyString
+  parent1: 1
+  parent2: 1
+  similar: MyString
+
+two:
+  name: MyString
+  name_kana: MyString
+  parent1: 1
+  parent2: 1
+  similar: MyString

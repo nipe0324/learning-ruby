@@ -1,0 +1,125 @@
+# == Schema Information
+#
+# Table name: restaurants
+#
+#  id                :integer          not null, primary key
+#  name              :string
+#  property          :string
+#  alphabet          :string
+#  name_kana         :string
+#  pref_id           :integer
+#  area_id           :integer
+#  station_id1       :integer
+#  station_time1     :integer
+#  station_distance1 :integer
+#  station_id2       :integer
+#  station_time2     :integer
+#  station_distance2 :integer
+#  station_id3       :integer
+#  station_time3     :integer
+#  station_distance3 :integer
+#  category_id1      :integer
+#  category_id2      :integer
+#  category_id3      :integer
+#  category_id4      :integer
+#  category_id5      :integer
+#  zip               :string
+#  address           :string
+#  north_latitude    :float
+#  east_longitude    :float
+#  description       :text
+#  purpose           :integer
+#  open_morning      :integer
+#  open_lunch        :integer
+#  open_late         :integer
+#  photo_count       :integer
+#  special_count     :integer
+#  menu_count        :integer
+#  fan_count         :integer
+#  access_count      :integer
+#  created_on        :datetime
+#  modified_on       :datetime
+#  closed            :boolean
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  property: MyString
+  alphabet: MyString
+  name_kana: MyString
+  pref_id: 1
+  area_id: 1
+  station_id1: 1
+  station_time1: 1
+  station_distance1: 1
+  station_id2: 1
+  station_time2: 1
+  station_distance2: 1
+  station_id3: 1
+  station_time3: 1
+  station_distance3: 1
+  category_id1: 1
+  category_id2: 1
+  category_id3: 1
+  category_id4: 1
+  category_id5: 1
+  zip: MyString
+  address: MyString
+  north_latitude: 1.5
+  east_longitude: 1.5
+  description: MyText
+  purpose: 1
+  open_morning: 1
+  open_lunch: 1
+  open_late: 1
+  photo_count: 1
+  special_count: 1
+  menu_count: 1
+  fan_count: 1
+  access_count: 1
+  created_on: 2015-09-25 22:36:49
+  modified_on: 2015-09-25 22:36:49
+  closed: false
+
+two:
+  name: MyString
+  property: MyString
+  alphabet: MyString
+  name_kana: MyString
+  pref_id: 1
+  area_id: 1
+  station_id1: 1
+  station_time1: 1
+  station_distance1: 1
+  station_id2: 1
+  station_time2: 1
+  station_distance2: 1
+  station_id3: 1
+  station_time3: 1
+  station_distance3: 1
+  category_id1: 1
+  category_id2: 1
+  category_id3: 1
+  category_id4: 1
+  category_id5: 1
+  zip: MyString
+  address: MyString
+  north_latitude: 1.5
+  east_longitude: 1.5
+  description: MyText
+  purpose: 1
+  open_morning: 1
+  open_lunch: 1
+  open_late: 1
+  photo_count: 1
+  special_count: 1
+  menu_count: 1
+  fan_count: 1
+  access_count: 1
+  created_on: 2015-09-25 22:36:49
+  modified_on: 2015-09-25 22:36:49
+  closed: false

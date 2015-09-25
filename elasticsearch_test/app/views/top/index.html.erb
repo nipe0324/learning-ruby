@@ -1,0 +1,23 @@
+<h1>Restaurant List</h1>
+
+<p>全レストラン数: <%= @restaurant_count %></p>
+
+<!-- 検索フォームを追加:START -->
+<%= form_for @search_form, url: top_search_path, method: :get, html: { class: 'form-horizontal', role: 'search' } do |form| %>
+  <div class="input-group">
+    <%= form.text_field :query, class: 'form-control', placeholder: 'Search...' %>
+
+    <span class="input-group-btn">
+      <button type="submit" class="btn btn-default">
+        <span class="glyphicon glyphicon-search"></span>
+      </button>
+    </span>
+  </div>
+<% end %>
+<!-- 検索フォームを追加:END -->
+
+<ul>
+  <% @restaurants.each do |restrant| %>
+    <li><%= restrant.name %></li>
+  <% end %>
+</ul>

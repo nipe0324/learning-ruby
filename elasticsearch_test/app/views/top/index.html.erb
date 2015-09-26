@@ -18,6 +18,6 @@
 
 <ul>
   <% @restaurants.each do |restrant| %>
-    <li><%= restrant.name %></li>
+    <li><%= "#{restrant.id} #{restrant.name}(#{restrant.name_kana}) #{restrant.property}" %></li>
   <% end %>
 </ul>

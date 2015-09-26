@@ -56,4 +56,6 @@ class Restaurant < ActiveRecord::Base
   belongs_to :category3, class_name: Category, foreign_key: :category_id3
   belongs_to :category4, class_name: Category, foreign_key: :category_id4
   belongs_to :category5, class_name: Category, foreign_key: :category_id5
+
+  include RestaurantSearchable
 end

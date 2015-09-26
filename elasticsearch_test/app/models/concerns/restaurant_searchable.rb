@@ -129,8 +129,6 @@ module RestaurantSearchable
       @search_definition ||= {
         query: {},
 
-        size: 100
-
         # highlight: {
         #   pre_tags: ['<em class="label label-highlight">'],
         #   post_tags: ['</em>'],

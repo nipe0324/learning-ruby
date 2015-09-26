@@ -1,23 +1,45 @@
-<h1>Restaurant List</h1>
+<div class="col-md-12">
+  <h1><%= link_to 'Search Restaurants', top_index_path %></h1>
 
-<p>全レストラン数: <%= @restaurant_count %></p>
+  <%= form_for @search_form, url: top_search_path, method: :get, html: { class: 'form-horizontal', role: 'search' } do |form| %>
+    <div class="input-group">
+      <%= form.text_field :query, class: 'form-control', placeholder: 'Search...' %>
 
-<!-- 検索フォームを追加:START -->
-<%= form_for @search_form, url: top_search_path, method: :get, html: { class: 'form-horizontal', role: 'search' } do |form| %>
-  <div class="input-group">
-    <%= form.text_field :query, class: 'form-control', placeholder: 'Search...' %>
+      <span class="input-group-btn">
+        <button type="submit" class="btn btn-default">
+          <span class="glyphicon glyphicon-search"></span>
+        </button>
+      </span>
+    </div>
 
-    <span class="input-group-btn">
-      <button type="submit" class="btn btn-default">
-        <span class="glyphicon glyphicon-search"></span>
-      </button>
-    </span>
-  </div>
-<% end %>
-<!-- 検索フォームを追加:END -->
+    <div id="form-options" class="clearfix">
+      <div class="btn-group pull-right">
+        <p>
+          <small>
+            Displaying <%= (params[:page] || 1).to_i.ordinalize %> page with <%= @restaurants.size %> restaurants of <strong>total <%= @restaurants.total %></strong>
+          </small>
+        </p>
+      </div>
+    </div>
 
-<ul>
-  <% @restaurants.each do |restrant| %>
-    <li><%= "#{restrant.id} #{restrant.name}(#{restrant.name_kana}) #{restrant.property}" %></li>
   <% end %>
-</ul>
+
+  <hr>
+</div>
+
+<div id="facets" class="col-md-3">
+</div>
+
+<div class="col-md-9">
+  <div id="results">
+    <% @restaurants.each do |restrant| %>
+      <div class="result">
+        <h3 class="name">
+          <%= "#{restrant.id} #{restrant.name}(#{restrant.name_kana}) #{restrant.property}" %>
+        </h3>
+      </div>
+    <% end %>
+  </div>
+  <%= paginate @restaurants %>
+</div>
+

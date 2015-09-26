@@ -10,7 +10,7 @@ module RestaurantSearchable
     include Elasticsearch::Model::Callbacks
 
     # インデックス名を指定(RDBでいうデータベース)
-    index_name "elasticsarch_test-#{Rails.env}"
+    index_name "elasticsearch_test_#{Rails.env}"
     # タイプ名を指定(RDBでいうテーブル名)
     document_type "restaurant"
 
@@ -19,15 +19,19 @@ module RestaurantSearchable
     settings do
       mappings dynamic: 'false' do # デフォルトでマッピングが自動作成されるがそれを無効にする
 
-        # 参考: https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-core-types.html
+        # マッピングの参考
+        # https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-core-types.html
+        indexes :id, type: 'integer', index: 'not_analyzed'
 
-        indexes :id, index: 'not_analyzed'
-        indexes :created_at, type: 'date', store: true, index: 'not_analyzed'
-        indexes :updated_at, type: 'date', store: true, index: 'not_analyzed'
+        indexes :name, analyzer: 'kuromoji'
+        indexes :name_kana, analyzer: 'kuromoji'
+        indexes :alphabet
+        indexes :property, analyzer: 'kuromoji'
 
-        indexes :name
-        indexes :name_kana
-        indexes :property
+        indexes :address, analyzer: 'kuromoji'
+        indexes :description, analyzer: 'kuromoji'
+
+        indexes :created_on, type: 'date', format: 'date_time'
 
         indexes :pref do
           indexes :name, analyzer: 'keyword', index: 'not_analyzed'
@@ -41,16 +45,21 @@ module RestaurantSearchable
 
     # 検索する
     #
-    # @param query [String] 検索するフリーテキスト
+    # @param params [Hash] 検索のパラメータ
+    #                        query: 検索クエリ
+    #                        sort: ソートのキー 'id', 'created_on', ...
+    #                        order: ソート順 'asc' or 'desc'
+    #                        page: ページ番号
     # @return [Elasticsearch::Model::Response::Response]
-    def self.search(query, options = {})
-      self.setup_query(query)
+    def self.search(params)
+      self.setup_query(params[:query])
       # self.setup_filter(options)
-      self.setup_sort(options)
+      self.setup_sort(params[:sort], params[:order])
       # setup_suggest(query) if query.present?
-      __elasticsearch__.search(search_definition)
+      __elasticsearch__.search(search_definition).page(params[:page]).results
     end
 
+    # クエリの参考:https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-queries.html
     def self.setup_query(query)
       if query.present?
         search_definition[:query] = {
@@ -59,8 +68,10 @@ module RestaurantSearchable
               {
                 multi_match: {
                   query: query,
-                  type: 'phrase',
-                  fields: ['name', 'name_kana']
+                  fields: [
+                    'name^2', 'name_kana^2', 'alphabet^2',
+                    'property', 'address^4', 'description'
+                  ]
                 }
               }
             ]
@@ -71,59 +82,65 @@ module RestaurantSearchable
       end
     end
 
-    def setup_filter(options = {})
-      if options[:category]
-        f = { term: { categories: options[:category] } }
+    # def setup_filter(options = {})
+    #   if options[:category]
+    #     f = { term: { categories: options[:category] } }
 
-        __set_filters.(:authors, f)
-        __set_filters.(:published, f)
-      end
+    #     __set_filters.(:authors, f)
+    #     __set_filters.(:published, f)
+    #   end
 
-      if options[:author]
-        f = { term: { 'authors.full_name.raw' => options[:author] } }
+    #   if options[:author]
+    #     f = { term: { 'authors.full_name.raw' => options[:author] } }
 
-        __set_filters.(:categories, f)
-        __set_filters.(:published, f)
-      end
+    #     __set_filters.(:categories, f)
+    #     __set_filters.(:published, f)
+    #   end
 
-      if options[:published_week]
-        f = {
-          range: {
-            published_on: {
-              gte: options[:published_week],
-              lte: "#{options[:published_week]}||+1w"
-            }
-          }
-        }
+    #   if options[:published_week]
+    #     f = {
+    #       range: {
+    #         published_on: {
+    #           gte: options[:published_week],
+    #           lte: "#{options[:published_week]}||+1w"
+    #         }
+    #       }
+    #     }
 
-        __set_filters.(:categories, f)
-        __set_filters.(:authors, f)
+    #     __set_filters.(:categories, f)
+    #     __set_filters.(:authors, f)
+    #   end
+    # end
+
+    # ソートパラメータを指定しない場合は、スコア(_score)の降順に
+    # 並べられる(Elasticsearchのデフォルト)
+    # ソートの参考: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-sort.html
+    def self.setup_sort(sort, order)
+      unless sort =='relevancy'
+        # 通常はフィールドをソートするときスコアは計算されないが、
+        # track_scores = trueに設定し場合スコアは計算されトラックされる
+        # search_definition[:track_scores] = true
+        search_definition[:sort] = { sort => order }
       end
     end
 
-    def self.setup_sort(options = {})
-      # "sort": { "balance": { "order": "desc" } }
-      # search_definition[:sort] = { options[:sort] => 'desc' }
-      # search_definition[:track_scores] = true
-    end
-
-    def setup_suggest(query)
-      search_definition[:suggest] = {
-        text: query,
-        suggest_title: {
-          term: {
-            field: 'title.tokenized',
-            suggest_mode: 'always'
-          }
-        },
-        suggest_body: {
-          term: {
-            field: 'content.tokenized',
-            suggest_mode: 'always'
-          }
-        }
-      }
-    end
+    # def setup_suggest(query)
+    #   search_definition[:suggest] = {
+    #     text: query,
+    #     suggest_title: {
+    #       term: {
+    #         field: 'title.tokenized',
+    #         suggest_mode: 'always'
+    #       }
+    #     },
+    #     suggest_body: {
+    #       term: {
+    #         field: 'content.tokenized',
+    #         suggest_mode: 'always'
+    #       }
+    #     }
+    #   }
+    # end
 
     def self.search_definition
       @search_definition ||= {

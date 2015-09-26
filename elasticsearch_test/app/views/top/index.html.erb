@@ -1,9 +1,17 @@
 <div class="col-md-12">
   <h1><%= link_to 'Search Restaurants', top_index_path %></h1>
 
-  <%= form_for @search_form, url: top_search_path, method: :get, html: { class: 'form-horizontal', role: 'search' } do |form| %>
+  <!-- TODO: Extract to partial -->
+  <%= form_tag top_search_path, method: :get do %>
+    <%= hidden_field_tag :sort, params[:sort] %>
+    <%= hidden_field_tag :order, params[:order] %>
     <div class="input-group">
-      <%= form.text_field :query, class: 'form-control', placeholder: 'Search...' %>
+      <%= text_field_tag(
+        :query,
+        @search_form.query,
+        class: 'form-control',
+        placeholder: '店名、場所など'
+      ) %>
 
       <span class="input-group-btn">
         <button type="submit" class="btn btn-default">
@@ -14,32 +22,64 @@
 
     <div id="form-options" class="clearfix">
       <div class="btn-group pull-right">
-        <p>
+        <%# 検索にヒットした件数を表示 %>
+        <p style="float: left; margin: 0.1em 0 0 0">
           <small>
             Displaying <%= (params[:page] || 1).to_i.ordinalize %> page with <%= @restaurants.size %> restaurants of <strong>total <%= @restaurants.total %></strong>
           </small>
         </p>
+
+        <%# ソート順 %>
+        <!-- TODO: Refacoring Decorator? Helper? -->
+        <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" style="margin-left: 0.5em">
+          <% current_sort = (params[:sort] || 'id').humanize %>
+          <% current_order = params[:order] || 'asc' %>
+          sorted by <%= current_sort %> <%= current_order %><span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <% %w(id created_on relevancy).each do |sort| %>
+            <% %w(asc desc).each do |order| %>
+              <% next if sort == 'relevancy' && order == 'asc' %>
+              <li>
+                <%= link_to(
+                  "Sort by #{sort.humanize} #{order}",
+                  top_search_path(
+                    params.except(:controller, :action).merge(sort: sort, order: order)
+                  ),
+                  class: 'btn-xs'
+                ) %>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
       </div>
     </div>
-
   <% end %>
 
   <hr>
 </div>
 
+<!-- TODO: Extract to partial -->
 <div id="facets" class="col-md-3">
 </div>
 
 <div class="col-md-9">
   <div id="results">
+    <!-- TODO: Extract to partial -->
     <% @restaurants.each do |restrant| %>
       <div class="result">
         <h3 class="name">
-          <%= "#{restrant.id} #{restrant.name}(#{restrant.name_kana}) #{restrant.property}" %>
+          <%= "#{restrant.id}: #{restrant.name} #{restrant.property}" %>
         </h3>
+        <p><%= restrant.description %></p>
+
+        <p class="text-muted">
+          <small>Address: <%= restrant.address %></small><br>
+          <small>Created on: <%= restrant.created_on %></small> |
+          <small>Score: <%= restrant._score %></small>
+        </p>
       </div>
     <% end %>
   </div>
   <%= paginate @restaurants %>
 </div>
-

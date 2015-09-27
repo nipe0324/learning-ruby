@@ -17,6 +17,7 @@ module RestaurantSearchable
     # インデックス設定とマッピング(RDBでいうスキーマ)を設定
     # settings index: { number_of_shards: 1, number_of_replicas: 0 } do
     settings do
+
       mappings dynamic: 'false' do # デフォルトでマッピングが自動作成されるがそれを無効にする
 
         # マッピングの参考
@@ -37,9 +38,7 @@ module RestaurantSearchable
           indexes :name, analyzer: 'keyword', index: 'not_analyzed'
         end
 
-        indexes :category1 do
-          indexes :name, analyzer: 'keyword', index: 'not_analyzed'
-        end
+        indexes :categories, analyzer: 'keyword', index: 'not_analyzed'
       end
     end
 
@@ -51,16 +50,51 @@ module RestaurantSearchable
     #                        order: ソート順 'asc' or 'desc'
     #                        page: ページ番号
     # @return [Elasticsearch::Model::Response::Response]
-    def self.search(params)
-      self.setup_query(params[:query])
-      # self.setup_filter(options)
-      self.setup_sort(params[:sort], params[:order])
+    def my_search(params)
+      setup_query(params[:query])
+      setup_filter(params)
+      setup_sort(params[:sort], params[:order])
       # setup_suggest(query) if query.present?
-      __elasticsearch__.search(search_definition).page(params[:page]).results
+      Restaurant.__elasticsearch__.search(search_definition).page(params[:page]).results
+    end
+
+    def search_definition
+      @search_definition ||= {
+        query: {},
+
+        highlight: {
+          pre_tags: ['<em class="label label-highlight">'],
+          post_tags: ['</em>'],
+          fields: {
+            name:    { number_of_fragments: 0 },
+            property: { number_of_fragments: 0 },
+            description:  { fragment_size: 50 },
+            categories:  { fragment_size: 50 },
+            address:  { fragment_size: 50 },
+          }
+        },
+
+        filter: {},
+
+        # aggregationの参考
+        # https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html
+        aggs: {
+          categories: {
+            terms: {
+              field: 'categories'
+            },
+          },
+          pref: {
+            terms: {
+              field: 'pref.name'
+            },
+          }
+        }
+      }
     end
 
     # クエリの参考:https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-queries.html
-    def self.setup_query(query)
+    def setup_query(query)
       if query.present?
         search_definition[:query] = {
           bool: {
@@ -68,6 +102,7 @@ module RestaurantSearchable
               {
                 multi_match: {
                   query: query,
+                  type: 'phrase',
                   fields: [
                     'name^2', 'name_kana^2', 'alphabet^2',
                     'property', 'address^4', 'description'
@@ -82,40 +117,78 @@ module RestaurantSearchable
       end
     end
 
-    # def setup_filter(options = {})
-    #   if options[:category]
-    #     f = { term: { categories: options[:category] } }
+    def setup_filter(params = {})
+      # Prefill and set the filters (top-level `filter` and `facet_filter` elements)
+      #
+      # __set_filters = lambda do |key, f|
 
-    #     __set_filters.(:authors, f)
-    #     __set_filters.(:published, f)
-    #   end
+      #   search_definition[:filter][:and] ||= []
+      #   search_definition[:filter][:and]  |= [f]
 
-    #   if options[:author]
-    #     f = { term: { 'authors.full_name.raw' => options[:author] } }
+      #   # search_definition[:aggs][key.to_sym][:filter][:and] ||= []
+      #   # search_definition[:aggs][key.to_sym][:filter][:and]  |= [f]
+      # end
 
-    #     __set_filters.(:categories, f)
-    #     __set_filters.(:published, f)
-    #   end
+      if params[:categories]
+        f = { term: { categories: params[:categories] } }
+        search_definition[:filter][:and] ||= []
+        search_definition[:filter][:and]  |= [f]
 
-    #   if options[:published_week]
-    #     f = {
-    #       range: {
-    #         published_on: {
-    #           gte: options[:published_week],
-    #           lte: "#{options[:published_week]}||+1w"
-    #         }
-    #       }
-    #     }
+        search_definition[:aggs][:pref] = {
+          filter: {
+            term: {
+              categories: params[:categories]
+            }
+          },
+          aggs: {
+            categories: {
+              terms: {
+                field: 'pref.name'
+              }
+            }
+          }
+        }
+      end
 
-    #     __set_filters.(:categories, f)
-    #     __set_filters.(:authors, f)
-    #   end
-    # end
+      if params[:pref]
+        f = { term: { 'pref.name' => params[:pref] } }
+        search_definition[:filter][:and] ||= []
+        search_definition[:filter][:and]  |= [f]
+
+        search_definition[:aggs][:categories] = {
+          filter: {
+            term: {
+              'pref.name' => params[:pref]
+            }
+          },
+          aggs: {
+            pref: {
+              terms: {
+                field: 'categories'
+              }
+            }
+          }
+        }
+      end
+
+      # if params[:published_week]
+      #   f = {
+      #     range: {
+      #       published_on: {
+      #         gte: params[:published_week],
+      #         lte: "#{params[:published_week]}||+1w"
+      #       }
+      #     }
+      #   }
+      #   __set_filters.(:categories, f)
+      #   __set_filters.(:authors, f)
+      # end
+    end
 
     # ソートパラメータを指定しない場合は、スコア(_score)の降順に
     # 並べられる(Elasticsearchのデフォルト)
     # ソートの参考: https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-sort.html
-    def self.setup_sort(sort, order)
+    def setup_sort(sort, order)
       unless sort =='relevancy'
         # 通常はフィールドをソートするときスコアは計算されないが、
         # track_scores = trueに設定し場合スコアは計算されトラックされる
@@ -142,64 +215,16 @@ module RestaurantSearchable
     #   }
     # end
 
-    def self.search_definition
-      @search_definition ||= {
-        query: {},
+    # Elasticsearchから返されるJSON形式にシリアライズされたデータをカスタマイズする
+    def as_indexed_json(options={})
+      hash = as_json(
+        include: { pref: { only: [:name] } }
+      )
 
-        # highlight: {
-        #   pre_tags: ['<em class="label label-highlight">'],
-        #   post_tags: ['</em>'],
-        #   fields: {
-        #     title:    { number_of_fragments: 0 },
-        #     abstract: { number_of_fragments: 0 },
-        #     content:  { fragment_size: 50 }
-        #   }
-        # },
-
-        # filter: {},
-
-        # facets: {
-        #   categories: {
-        #     terms: {
-        #       field: 'categories'
-        #     },
-        #     facet_filter: {}
-        #   },
-        #   authors: {
-        #     terms: {
-        #       field: 'authors.full_name.raw'
-        #     },
-        #     facet_filter: {}
-        #   },
-        #   published: {
-        #     date_histogram: {
-        #       field: 'published_on',
-        #       interval: 'week'
-        #     },
-        #     facet_filter: {}
-        #   }
-        # }
-      }
+      hash['categories'] = [
+        category1.try(:name), category2.try(:name), category3.try(:name), category4.try(:name), category5.try(:name)
+      ].compact
+      hash
     end
-
-    def filter
-      @filter ||= lambda do |key, f|
-        @search_definition[:filter][:and] ||= []
-        @search_definition[:filter][:and]  |= [f]
-
-        @search_definition[:facets][key.to_sym][:facet_filter][:and] ||= []
-        @search_definition[:facets][key.to_sym][:facet_filter][:and]  |= [f]
-      end
-    end
-
-    # # Elasticsearchから返されるJSON形式にシリアライズされたデータをカスタマイズする
-    # def as_indexed_json(options={})
-    #   hash = self.as_json(
-    #     include: { authors:    { methods: [:full_name], only: [:full_name] },
-    #                comments:   { only: [:body, :stars, :pick, :user, :user_location] }
-    #              })
-    #   hash['categories'] = self.categories.map(&:title)
-    #   hash
-    # end
   end
 end

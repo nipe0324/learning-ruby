@@ -15,6 +15,6 @@ class TopController < ApplicationController
   private
 
     def search_params
-      params.permit(:query, :page, :sort, :order)
+      params.permit(:query, :categories, :pref, :page, :sort, :order)
     end
 end

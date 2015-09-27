@@ -1,10 +1,10 @@
 class RestaurantSearchForm
   include ActiveModel::Model
 
-  attr_accessor :query, :page, :sort, :order
+  attr_accessor :query, :categories, :pref, :page, :sort, :order
 
   def search
-    ::Restaurant.search(params)
+    ::Restaurant.new.my_search(params)
     # t = ::Restaurant.arel_table
     # # NOTE: 20万件表示しようとすると止まってしまうのでlimitメソッドで制限をかけておく
     # results = ::Restaurant.all.order(:created_at).limit(100)
@@ -17,6 +17,8 @@ class RestaurantSearchForm
     def params
       {
         query: query || nil,
+        categories: categories || nil,
+        pref:  pref  || nil,
         page:  page  || 1,
         sort:  sort  || 'id',
         order: order || 'asc'

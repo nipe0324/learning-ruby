@@ -3,8 +3,11 @@
 
   <!-- TODO: Extract to partial -->
   <%= form_tag top_search_path, method: :get do %>
-    <%= hidden_field_tag :sort, params[:sort] %>
-    <%= hidden_field_tag :order, params[:order] %>
+    <%= hidden_field_tag :sort,  params[:sort] || 'id' %>
+    <%= hidden_field_tag :order, params[:order] || 'asc' %>
+    <%= hidden_field_tag :categories,  params[:categories] %>
+    <%= hidden_field_tag :pref, params[:pref] %>
+
     <div class="input-group">
       <%= text_field_tag(
         :query,
@@ -61,22 +64,73 @@
 
 <!-- TODO: Extract to partial -->
 <div id="facets" class="col-md-3">
+  <div class="categories panel panel-default">
+    <p class="panel-heading">
+      <%= link_to(
+        'All Sections &rarr;'.html_safe,
+        top_search_path(params.except(:controller, :action).merge(categories: nil))
+      ) %>
+    </p>
+    <div class="list-group">
+      <%
+        categories_buckets =
+          @restaurants.response.response['aggregations']['categories']['buckets'] ||
+          @restaurants.response.response['aggregations']['categories']['pref']['buckets']
+      %>
+      <% categories_buckets.each do |b| %>
+        <%= link_to(
+          top_search_path(params.except(:controller, :action).merge(categories: b['key'])),
+          class: "list-group-item#{' active' if params[:categories] == b['key']}"
+        ) do
+          b['key'].titleize.html_safe + content_tag(:small, b['doc_count'], class: 'badge').html_safe
+        end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="categories panel panel-default">
+    <p class="panel-heading">
+      <%= link_to(
+        'All Sections &rarr;'.html_safe,
+        top_search_path(params.except(:controller, :action).merge(pref: nil))
+      ) %>
+    </p>
+    <div class="list-group">
+      <%
+        pref_buckets =
+          @restaurants.response.response['aggregations']['pref']['buckets'] ||
+          @restaurants.response.response['aggregations']['pref']['categories']['buckets']
+      %>
+      <% pref_buckets.each do |b| %>
+        <%= link_to(
+          top_search_path(params.except(:controller, :action).merge(pref: b['key'])),
+          class: "list-group-item#{' active' if params[:pref] == b['key']}"
+        ) do
+          b['key'].titleize.html_safe + content_tag(:small, b['doc_count'], class: 'badge').html_safe
+        end %>
+      <% end %>
+    </div>
+  </div>
 </div>
 
 <div class="col-md-9">
   <div id="results">
     <!-- TODO: Extract to partial -->
-    <% @restaurants.each do |restrant| %>
+    <% @restaurants.each do |restaurant| %>
       <div class="result">
         <h3 class="name">
-          <%= "#{restrant.id}: #{restrant.name} #{restrant.property}" %>
+          <%= restaurant.id %>:
+          <%= restaurant.try(:highlight).try(:name) ? restaurant.highlight.name.join.html_safe : restaurant.name %>
+          <%= restaurant.try(:highlight).try(:property) ? restaurant.highlight.property.join.html_safe : restaurant.property %>
         </h3>
-        <p><%= restrant.description %></p>
+
+        <p><%= restaurant.try(:highlight).try(:description) ? restaurant.highlight.description.join.html_safe : restaurant.description %></p>
 
         <p class="text-muted">
-          <small>Address: <%= restrant.address %></small><br>
-          <small>Created on: <%= restrant.created_on %></small> |
-          <small>Score: <%= restrant._score %></small>
+          <small>Categories: <%= restaurant.categories.join(', ') %></small><br>
+          <small>Address: <%= restaurant.address %></small><br>
+          <small>Created on: <%= restaurant.created_on %></small> |
+          <small>Score: <%= restaurant._score %></small>
         </p>
       </div>
     <% end %>

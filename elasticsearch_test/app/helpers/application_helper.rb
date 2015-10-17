@@ -8,7 +8,7 @@ module ApplicationHelper
 
   # ページ表示件数のリンクを返す
   #   per_pages - ページの表示件数を配列で指定する。最初の値がデフォルト値になる。（例： [40, 80, 120])
-  #   params    - paramsオブジェクト(:per 現在の表示件数、:q 検索キーワード、:page ページ数)
+  #   params    - paramsオブジェクト(:per 現在の表示件数、:q 検索キーワード、:closed 閉店しているレストランも含める)
   def per_page_links(per_pages: [], params: {})
     # 入力チェック
     unless per_pages.is_a?(Array) && per_pages.size >= 1 && per_pages.all?{|n| n.is_a?(Integer)}
@@ -23,9 +23,9 @@ module ApplicationHelper
       if current == per_page
         per_page
       else
-        # 表示件数のリンクを押した時にqパラメータは設定したままにする。
+        # 表示件数のリンクを押した時にqとclosedパラメータは設定したままにする。
         # pageは設定しないのでページは0にクリアされる
-        query_string = params.slice(:q).merge(per: per_page)
+        query_string = params.slice(:q, :closed).merge(per: per_page)
         link_to(per_page, "?#{query_string.to_query}")
       end
     end.join(' | ').html_safe

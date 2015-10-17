@@ -50,32 +50,28 @@ class Restaurant < ActiveRecord::Base
   def self.search(params = {})
     # 検索パラメータを取得
     keyword = params[:q]
+    closed  = params[:closed].present?
 
     # 検索クエリを作成（Elasticsearch::DSLを利用）
     # 参考: https://github.com/elastic/elasticsearch-ruby/tree/master/elasticsearch-dsl
-    #
-    # 検索キーワードが入力されたときは、下記クエリを作成
-    # "query": {
-    #   "multi_match": {
-    #     "query":    "牛角", // 検索キーワード
-    #     "fields": ["name", "name_kana", "address", "pref.name", "category.name"]
-    #   }
-    # }
-    #
-    # 検索キーワードが入力されてない時は、下記クエリを作成（すべてのドキュメントを取得）
-    # "query": {
-    #   "match_all": {}
-    # }
     search_definition = Elasticsearch::DSL::Search.search {
       query {
-        if keyword.present?
-          multi_match {
-            query keyword
-            fields %w{ name name_kana address pref.name category.name }
+        filtered {
+          query {
+            if keyword.present?
+              multi_match {
+                query keyword
+                fields %w{ name name_kana address pref.name category.name }
+              }
+            else
+              match_all
+            end
           }
-        else
-          match_all
-        end
+
+          filter {
+            term closed: 'false'
+          } unless closed
+        }
       }
     }
 

@@ -5,6 +5,11 @@
   <div class="form-group">
     <%= search_field_tag :q, params[:q], class: 'form-control', placeholder: '店名、場所、カテゴリ' %>
   </div>
+  <div class="checkbox">
+    <label>
+      <%= check_box_tag :closed, 't', params[:closed].present? %> 閉店しているレストランも検索結果に含める
+    </label>
+  </div>
   <button type="submit" class="btn btn-default">検索</button>
 <% end %>
 

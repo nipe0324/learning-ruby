@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  name_kana: MyString
+  property: MyString
+  zip: MyString
+  pref_id: 1
+  address: MyString
+  category_id: 1
+  description: MyText
+  closed: false
+
+two:
+  name: MyString
+  name_kana: MyString
+  property: MyString
+  zip: MyString
+  pref_id: 1
+  address: MyString
+  category_id: 1
+  description: MyText
+  closed: false

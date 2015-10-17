@@ -1,3 +1,6 @@
+# Restaurant.__elasticsearch__.create_index! force: true
+# Restaurant.__elasticsearch__.refresh_index!
+# Restaurant.import
 class Restaurant < ActiveRecord::Base
   belongs_to :category
   belongs_to :pref

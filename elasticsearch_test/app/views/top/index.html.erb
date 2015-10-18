@@ -19,6 +19,7 @@
 <div class="col-xs-9">
   <div>検索結果: <%= current_document %> / 約<%= @restaurants.results.total %>件</div>
   <div>表示件数: <%= per_page_links %></div>
+  <div>ソート順: <%= sort_links %></div>
 
   <div id="results">
     <% @restaurants.each do |r| %>
@@ -28,6 +29,7 @@
         <p class="text-muted">
           <small>都道府県: <%= r.pref.name %></small>
           <small>カテゴリ: <%= r.category.name %></small>
+          <small>出店日: <%= r.created_at %></small>
         </p>
       </div>
     <% end %>

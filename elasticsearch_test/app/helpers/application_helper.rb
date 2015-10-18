@@ -20,10 +20,25 @@ module ApplicationHelper
     end.join(' | ').html_safe
   end
 
+  # ソートのリンクを返す
+  def sort_links
+    # 現在の値の設定。例：{ sort: 'created_at+asc' }
+    current = { sort: query_string.fetch(:sort, ::Restaurant::SORTS.first[:sort]) }
+
+    # aタグの作成
+    ::Restaurant::SORTS.map do |sort|
+      if current == sort.except(:name)
+        sort[:name]
+      else
+        link_to(sort[:name], "?#{query_string.merge(sort: sort[:sort]).to_query}")
+      end
+    end.join(' | ').html_safe
+  end
+
   # 各リンクで引き継ぐクエリストリングパラメータ
   # 表示件数やソート順などのリンクを押した時に`q`や`closed`などのパラメータは引き続き設定したままにするために使用
   # 下記で`:page`は設定しないので、リンクを押した時に、ページは0ページ目ににクリアされる
   def query_string
-    params.slice(:q, :closed, :per)
+    params.slice(:q, :closed, :per, :sort)
   end
 end

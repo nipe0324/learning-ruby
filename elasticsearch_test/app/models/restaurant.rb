@@ -5,6 +5,14 @@ class Restaurant < ActiveRecord::Base
   # ページの表示件数
   PER_PAGES = [40, 80, 120]
 
+  # ソートの組み合わせ
+  # name: 画面に表示する文字列。sort: <ソートするキー名>+<ソート順序(asc or desc)>
+  SORTS = [
+    { name: '出店の新しい順', sort: 'created_at+desc' },
+    { name: '出店の古い順',   sort: 'created_at+asc' },
+    { name: 'あいうえお順',   sort: 'name_kana+asc' }
+  ]
+
   # デフォルトの１ページの表示件数
   paginates_per PER_PAGES.first
 
@@ -55,22 +63,10 @@ class Restaurant < ActiveRecord::Base
     # 検索パラメータを取得
     keyword = params[:q]
     closed  = params[:closed].present?
+    sort_by, order = (params[:sort] || SORTS.first[:sort]).split('+')
 
     # 検索クエリを作成（Elasticsearch::DSLを利用）
     # 参考: https://github.com/elastic/elasticsearch-ruby/tree/master/elasticsearch-dsl
-    #
-    # 検索キーワードが入力されたときは、下記クエリを作成
-    # "query": {
-    #   "multi_match": {
-    #     "query":    "牛角", // 検索キーワード
-    #     "fields": ["name", "name_kana", "address", "pref.name", "category.name"]
-    #   }
-    # }
-    #
-    # 検索キーワードが入力されてない時は、下記クエリを作成（すべてのドキュメントを取得）
-    # "query": {
-    #   "match_all": {}
-    # }
     search_definition = Elasticsearch::DSL::Search.search {
       query {
         filtered {
@@ -91,6 +87,12 @@ class Restaurant < ActiveRecord::Base
             term closed: 'false'
           } unless closed
         }
+      }
+
+      # ソート
+      # @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-sort.html
+      sort {
+        by sort_by, order: order
       }
     }
 

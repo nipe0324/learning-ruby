@@ -2,6 +2,12 @@ class Restaurant < ActiveRecord::Base
   belongs_to :category
   belongs_to :pref
 
+  # ページの表示件数
+  PER_PAGES = [40, 80, 120]
+
+  # デフォルトの１ページの表示件数
+  paginates_per PER_PAGES.first
+
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
 

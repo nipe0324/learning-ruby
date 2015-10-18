@@ -5,6 +5,14 @@ class Restaurant < ActiveRecord::Base
   belongs_to :category
   belongs_to :pref
 
+  # ソートの組み合わせ
+  # name: 画面に表示する文字列。sort: <ソートするキー名>+<ソート順序(asc or desc)>
+  SORTS = [
+    { name: '出店の新しい順', sort: 'created_at+desc' },
+    { name: '出店の古い順',   sort: 'created_at+asc' },
+    { name: 'あいうえお順',   sort: 'name_kana+asc' }
+  ]
+
   include Elasticsearch::Model
   include Elasticsearch::Model::Callbacks
 
@@ -51,12 +59,14 @@ class Restaurant < ActiveRecord::Base
     # 検索パラメータを取得
     keyword = params[:q]
     closed  = params[:closed].present?
+    sort_by, order = (params[:sort] || SORTS.first[:sort]).split('+')
 
     # 検索クエリを作成（Elasticsearch::DSLを利用）
     # 参考: https://github.com/elastic/elasticsearch-ruby/tree/master/elasticsearch-dsl
     search_definition = Elasticsearch::DSL::Search.search {
       query {
         filtered {
+          # 全文検索
           query {
             if keyword.present?
               multi_match {
@@ -68,10 +78,16 @@ class Restaurant < ActiveRecord::Base
             end
           }
 
+          # closed (閉店しているか否か)
           filter {
             term closed: 'false'
           } unless closed
         }
+      }
+
+      # ソート
+      sort {
+        by sort_by, order: order
       }
     }
 

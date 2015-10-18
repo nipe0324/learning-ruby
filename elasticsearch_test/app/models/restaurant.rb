@@ -13,6 +13,9 @@ class Restaurant < ActiveRecord::Base
     { name: 'あいうえお順',   sort: 'name_kana+asc' }
   ]
 
+  # デリミタ: 複数カテゴリなどの検索条件に使用する
+  DELIMITER = '+'
+
   # デフォルトの１ページの表示件数
   paginates_per PER_PAGES.first
 
@@ -64,6 +67,8 @@ class Restaurant < ActiveRecord::Base
     keyword = params[:q]
     closed  = params[:closed].present?
     sort_by, order = (params[:sort] || SORTS.first[:sort]).split('+')
+    category_names = params[:category].try(:split, Restaurant::DELIMITER) || []
+    pref_names     = params[:pref].try(:split, Restaurant::DELIMITER) || []
 
     # 検索クエリを作成（Elasticsearch::DSLを利用）
     # 参考: https://github.com/elastic/elasticsearch-ruby/tree/master/elasticsearch-dsl
@@ -94,6 +99,74 @@ class Restaurant < ActiveRecord::Base
       sort {
         by sort_by, order: order
       }
+
+      # アグリゲーション - 集約をする
+      # @see https://www.elastic.co/guide/en/elasticsearch/guide/current/aggregations.html
+      aggregation :category do
+        # categoryアグリゲーションのフィルタ条件
+        condition = Elasticsearch::DSL::Search::Filters::Bool.new {
+          if pref_names.present?
+            pref_names.each { |pref_name|
+              should { term 'pref.name' => pref_name }
+            }
+          else
+            must { match_all }
+          end
+        }
+
+        # アグリゲーションのフィルタを行う
+        filter condition do
+          aggregation :category do
+            terms field: 'category.name', size: 10
+          end
+        end
+      end
+
+      aggregation :pref do
+        # prefアグリゲーションのフィルタ条件
+        condition = Elasticsearch::DSL::Search::Filters::Bool.new {
+          if category_names.present?
+            category_names.each { |category_name|
+              should { term 'category.name' => category_name }
+            }
+          else
+            must { match_all }
+          end
+        }
+
+        # アグリゲーションのフィルタを行う
+        filter condition do
+          aggregation :pref do
+            terms field: 'pref.name', size: 47
+          end
+        end
+      end
+
+      # Post Filter - 検索結果のみにフィルターをしたい場合に使う。アグリゲーションに対してフィルターされない
+      # @see https://www.elastic.co/guide/en/elasticsearch/guide/current/_post_filter.html
+      if category_names.present? || pref_names.present?
+        post_filter {
+          bool {
+            # カテゴリのフィルタ
+            must {
+              bool {
+                category_names.each { |category_name|
+                  should { term 'category.name' => category_name }
+                }
+              }
+            } if category_names.present?
+
+            # 都道府県のフィルタ
+            must {
+              bool {
+                pref_names.each { |pref_name|
+                  should { term 'pref.name' => pref_name }
+                }
+              }
+            } if pref_names.present?
+          }
+        }
+      end
     }
 
     # 検索クエリをなげて結果を表示

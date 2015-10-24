@@ -89,4 +89,24 @@ module ApplicationHelper
   def query_string
     params.slice(:q, :closed, :per, :sort, :category, :pref)
   end
+
+  # ハイライト文字列(<highlight>[文字列]</highlight>)か文字列([文字列])を返す
+  #   result [Elasticsearch::Model::Response::Result] を指定
+  #   field  フィールド名
+  def highlight_or_text(result, field)
+    highlight_for_result(result, field) || text_for_result(result, field)
+  end
+
+  # ハイライト文字列を返す
+  # 存在しな場合もあるのでtryを行っている
+  def highlight_for_result(result, field)
+    result.try(:highlight).try(field.to_sym).try(:join).try(:html_safe)
+    end
+
+  # 文字列を返す
+  # pref.nameなどに対応できるようにするためにinjectメソッドを利用しています
+  def text_for_result(result, field)
+    field.to_s.split('.').inject(result) { |result, field| result.send(field.to_sym) }
+  end
 end
+

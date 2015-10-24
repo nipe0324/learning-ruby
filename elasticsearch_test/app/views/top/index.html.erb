@@ -56,11 +56,11 @@
     <% @restaurants.each do |r| %>
       <hr />
       <div class="result">
-        <h4><%= r.name %>（<%= r.name_kana %>）</h4>
+        <h4><%= highlight_or_text(r, :name) %>（<%= highlight_or_text(r, :name_kana) %>）</h4>
         <p class="text-muted">
-          <small>都道府県: <%= r.pref.name %></small>
-          <small>カテゴリ: <%= r.category.name %></small>
-          <small>出店日: <%= r.created_at %></small>
+          <small><b>都道府県:</b> <%= highlight_or_text(r, :'pref.name') %></small>
+          <small><b>カテゴリ:</b> <%= highlight_or_text(r, :'category.name') %></small>
+          <small><b>出店日:</b> <%= r.created_at %></small>
         </p>
       </div>
     <% end %>

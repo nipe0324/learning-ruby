@@ -94,6 +94,12 @@ class Restaurant < ActiveRecord::Base
         }
       }
 
+      highlight {
+        pre_tags ['<highlight>']
+        post_tags ['</highlight>']
+        fields %w{ name name_kana address pref.name category.name }
+      }
+
       # ソート
       # @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-request-sort.html
       sort {

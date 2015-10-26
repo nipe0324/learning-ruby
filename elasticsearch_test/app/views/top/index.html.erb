@@ -1,4 +1,4 @@
-<h1>レストラン検索</h1>
+<h1><%= link_to "レストラン検索", root_path %></h1>
 
 <!-- 検索フォーム -->
 <%= form_tag root_path, method: :get, enforce_utf8: false do %>
@@ -48,7 +48,7 @@
 
 <!-- 検索結果の表示 -->
 <div class="col-xs-9">
-  <div>検索結果: <%= current_document %> / 約<%= @restaurants.results.total %>件</div>
+  <div>検索結果: <%= number_with_delimiter current_document %> / 約<%= number_with_delimiter @restaurants.results.total %>件</div>
   <div>表示件数: <%= per_page_links %></div>
   <div>ソート順: <%= sort_links %></div>
 
@@ -57,7 +57,9 @@
       <hr />
       <div class="result">
         <h4><%= highlight_or_text(r, :name) %>（<%= highlight_or_text(r, :name_kana) %>）</h4>
+        <p><%= r.description %></p>
         <p class="text-muted">
+          <small><b>アクセス数</b> (<%= r.access_count %>)</small>
           <small><b>都道府県:</b> <%= highlight_or_text(r, :'pref.name') %></small>
           <small><b>カテゴリ:</b> <%= highlight_or_text(r, :'category.name') %></small>
           <small><b>出店日:</b> <%= r.created_at %></small>

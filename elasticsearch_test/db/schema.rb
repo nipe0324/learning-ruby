@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20151018111711) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "categories", force: :cascade do |t|
     t.string   "name"
     t.string   "name_kana"

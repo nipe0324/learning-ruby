@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: restaurants
+#
+#  id           :integer          not null, primary key
+#  name         :string
+#  alphabet     :string
+#  name_kana    :string
+#  pref_id      :integer
+#  category_id  :integer
+#  zip          :string
+#  address      :string
+#  lat          :float
+#  lon          :float
+#  description  :text
+#  access_count :integer
+#  created_at   :datetime
+#  updated_at   :datetime
+#  closed       :boolean
+#
+
 class Restaurant < ActiveRecord::Base
   belongs_to :category
   belongs_to :pref
@@ -16,17 +37,40 @@ class Restaurant < ActiveRecord::Base
   # デリミタ: 複数カテゴリなどの検索条件に使用する
   DELIMITER = '+'
 
+  # サジェストのキー
+  SUGGEST_KEYS = %w( name_raw name_kana name_romaji name_hira )
+
   # デフォルトの１ページの表示件数
   paginates_per PER_PAGES.first
 
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+  # include Elasticsearch::Model::Callbacks
+
+  # インデックス再作成
+  # Restaurant.__elasticsearch__.create_index! force: true
+  # Restaurant.__elasticsearch__.refresh_index!
+  # Restaurant.import
 
   index_name "restaurant_#{Rails.env}" # インデックス名を指定(RDBでいうデータベース)
   # document_type # ドキュメントタイプを指定(RDBでいうテーブル)。デフォルトでクラス名
 
   # インデックス設定とマッピング(RDBでいうスキーマ)を設定
-  settings do
+  settings index: {
+    analysis: {
+      analyzer: {
+        katakana_analyzer: {
+          tokenizer: 'kuromoji_tokenizer',
+          filter: ['katakana_readingform']
+        }
+      },
+      filter: {
+        katakana_readingform: {
+          type: 'kuromoji_readingform',
+          use_romaji: false
+        }
+      }
+    }
+  } do
     mappings dynamic: 'false' do # デフォルトでマッピングが自動作成されるがそれを無効にする
       # マッピングの公式ドキュメント
       # https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-core-types.html
@@ -36,17 +80,25 @@ class Restaurant < ActiveRecord::Base
       # kuromojiは日本語のアナライザーです。
       indexes :name,      analyzer: 'kuromoji'
       indexes :name_kana, analyzer: 'kuromoji'
+      indexes :alphabet
 
       indexes :zip
       indexes :address, analyzer: 'kuromoji'
+      indexes :description, analyzer: 'kuromoji'
 
       # type: booleanでclosedはboolean型として定義します
       indexes :closed, type: 'boolean'
+
+      indexes :access_count, type: 'integer'
 
       # date型として定義
       # formatは日付のフォーマットを指定(2015-10-16T19:26:03.679Z)
       # 詳細: https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-date-format.html
       indexes :created_at, type: 'date', format: 'date_time'
+      indexes :updated_at, type: 'date', format: 'date_time'
+
+      # ロケーション
+      indexes :location, type: 'geo_point'
 
       # 階層化してインデクシングできます。pref.nameとして検索できます。
       indexes :pref do
@@ -55,6 +107,13 @@ class Restaurant < ActiveRecord::Base
 
       indexes :category do
         indexes :name, analyzer: 'keyword', index: 'not_analyzed'
+      end
+
+      indexes :suggest do
+        indexes :name_raw, type: 'completion'
+        indexes :name_hira, type: 'completion'
+        indexes :name_kana, type: 'completion', index_analyzer: 'katakana_analyzer'
+        indexes :name_romaji, type: 'completion'
       end
     end
   end
@@ -180,14 +239,51 @@ class Restaurant < ActiveRecord::Base
     __elasticsearch__.search(search_definition)
   end
 
+  # サジェスト結果を配列で返す
+  # @see https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters.html
+  def self.suggest(keyword)
+    suggest_definition = SUGGEST_KEYS.inject({}) do |result, key|
+      result.merge(
+        key => {
+          text: keyword,
+          completion: { field: "suggest.#{key}", size: 10 }
+        }
+      )
+    end
+
+    response = Elasticsearch::Persistence.client.suggest({
+      index: Restaurant.index_name,
+      body: suggest_definition
+    })
+
+    # Elasticsearchからの結果を配列に変換する
+    SUGGEST_KEYS.map do |key|
+      response[key][0]['options'].map{|opt| opt.fetch('text', nil)}
+    end.flatten.uniq
+  end
 
   # インデクシング時に呼び出されるメソッド
   # マッピングのデータを返すようにする
   def as_indexed_json(options = {})
     attributes
       .symbolize_keys
-      .slice(:name, :name_kana, :zip, :address, :closed, :created_at)
+      .slice(
+        :name, :name_kana, :alphabet,
+        :zip, :address, :closed, :description,
+        :access_count,
+        :created_at, :updated_at)
       .merge(pref: { name: pref.name })
       .merge(category: { name: category.name })
+      .merge(location: location)
+      .merge(suggest: {
+        name_raw: name,
+        name_hira: { input: name_kana, output: name },
+        name_kana: name,
+        name_romaji: { input: alphabet, output: name },
+      })
+  end
+
+  def location
+    (lat && lon) ? "#{lat},#{lon}" : nil
   end
 end

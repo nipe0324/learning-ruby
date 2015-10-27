@@ -1,28 +1,43 @@
-== README
+Search Example Application with Rails and Elasticsearch
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Functions
 
-Things you may want to cover:
+* Search / Filter
+* Pagination
+* Sort
+* Aggregations (Facets) / Post Filter
+* Highlight
+* Autocomplete with Suggest
 
-* Ruby version
+## Development
 
-* System dependencies
+Install elasticsearch and Run
 
-* Configuration
+```
+brew install elasticsearch
+elasticsearch
+```
 
-* Database creation
+Create database and insert sample data
+(username: postgres, password: postgres)
 
-* Database initialization
+```
+createdb -U postgres elasticsearch_test_development
+psql -U postgres elasticsearch_test_development < db/dump.sql
+```
 
-* How to run the test suite
+Create index and import data from database to elasticsearch
 
-* Services (job queues, cache servers, search engines, etc.)
+```
+bundle exec rails console
+Restaurant.__elasticsearch__.create_index! force: true
+Restaurant.__elasticsearch__.refresh_index!
+Restaurant.import
+```
 
-* Deployment instructions
+Run rails server (WEBrick) and open search page
 
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+```
+bundle exec rails server
+open http://localhost:3000
+```

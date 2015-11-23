@@ -9,7 +9,7 @@ var MessageBox = React.createClass({
       dataType: 'json',
       cache:    false,
       success: function(messages) {
-        this.setState({ messages: messages, isLoading: true });
+        this.setState({ messages: messages, isLoading: false });
       }.bind(this),
       eror: function(_xhr, status, err) {
         console.error(this.props.url, status, err.toString());

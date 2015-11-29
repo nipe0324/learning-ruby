@@ -15,4 +15,5 @@
 /log/*.log
 /tmp
 
-devise/config/settings.yml
+*/node_modules/
+*/**/*.bundle.*

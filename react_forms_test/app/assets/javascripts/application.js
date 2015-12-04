@@ -3,3 +3,7 @@
 //= require react
 //= require react-router
 //= require classnames
+//= require router/variable
+//= require_tree ./stores
+//= require_tree ./components
+//= require router/routes

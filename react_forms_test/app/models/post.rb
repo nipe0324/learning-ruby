@@ -13,8 +13,11 @@
 class Post < ActiveRecord::Base
 
   belongs_to :category
+  has_many   :tags
+  accepts_nested_attributes_for :tags, allow_destroy: true, reject_if: :all_blank
 
-  validates :body, presence: true
   validates :category_id, presence: true
-  validates :title, presence: true
+  validates :tags,        presence: true
+  validates :title,       presence: true
+  validates :body,        presence: true
 end

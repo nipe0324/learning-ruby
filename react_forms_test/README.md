@@ -1,12 +1,15 @@
-Companion code to my blog post.
+Rails with React form sample
 
-## Blog Post
+## Feature
 
-http://blog.littleblimp.com/post/124492420923/restful-forms-with-react-part-1
+* View posts (title, category, tags, body)
+* New / Edit a post
+* Destroy a post
 
-## Live Demo
+## TODO
 
-http://littleblimp-reactforms.herokuapp.com
+* sort tag
+* autocomplete tag name
 
 ## Install
 
@@ -15,4 +18,3 @@ http://littleblimp-reactforms.herokuapp.com
 3. `rake db:setup`
 5. `rails s`
 6. <http://localhost:3000>
-

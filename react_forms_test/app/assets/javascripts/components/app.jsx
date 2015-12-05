@@ -15,3 +15,5 @@ class App extends React.Component {
   }
 
 };
+
+const ENTER_KEY = 13;

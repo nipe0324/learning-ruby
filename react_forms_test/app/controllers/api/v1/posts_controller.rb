@@ -38,7 +38,10 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:category_id, :body, :title)
+    hash = params.permit(:category_id, :body, :title, tags: [:id, :name, :_destroy])
+    # replace `tags` key with `tags_attributes` key
+    hash[:tags_attributes] = hash[:tags]
+    hash.delete(:tags)
+    hash
   end
-
 end

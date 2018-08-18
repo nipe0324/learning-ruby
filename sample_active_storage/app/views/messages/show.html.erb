@@ -1,0 +1,16 @@
+<p>
+  <strong>Content:</strong>
+  <%= @message.content %>
+</p>
+
+<p>
+  <strong>Images:</strong>
+  <% if @message.images.attached? %>
+    <% @message.images.each do |image| %>
+      <%= image_tag image, size: '120x120' %>
+    <% end %>
+  <% end %>
+</p>
+
+<%= link_to 'Edit', edit_message_path(@message) %> |
+<%= link_to 'Back', messages_path %>

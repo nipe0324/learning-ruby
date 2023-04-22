@@ -1,0 +1,18 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+gem 'mysql2'
+gem 'mysql2-cs-bind'
+gem 'puma'
+gem 'sinatra'
+gem 'sinatra-contrib'
+
+group :development do
+  gem 'irb'
+  gem 'ruby-prof'
+  gem 'stackprof'
+  gem 'rack-mini-profiler'
+  gem 'rack-lineprof'
+  gem 'memory_profiler'
+end

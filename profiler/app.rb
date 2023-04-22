@@ -28,15 +28,19 @@ class MyApp < Sinatra::Base
     # stackprof tmp/stackprof-cpu-*.dump --text --limit 10
     # stackprof tmp/stackprof-cpu-*.dump --text -m "MyApp#do_slow_stuff"
     # stackprof tmp/stackprof-wall-*.dump --text --limit 10 -m --file app.rb
-    require 'stackprof'
-    mode = :wall # cpu, object, custom
-    use StackProf::Middleware,
-      enabled: true,
-      mode:,
-      interval: 1000,
-      save_every: 5,
-      # raw: true,
-      path: "tmp/stackprof-#{mode}-myapp.dump"
+    # require 'stackprof'
+    # mode = :wall # cpu, object, custom
+    # use StackProf::Middleware,
+    #   enabled: true,
+    #   mode:,
+    #   interval: 1000,
+    #   save_every: 5,
+    #   # raw: true,
+    #   path: "tmp/stackprof-#{mode}-myapp.dump"
+
+    require 'ruby-prof'
+    RubyProf.measure_mode = RubyProf::WALL_TIME
+    use Rack::RubyProf, path: 'tmp/ruby-prof', only_paths: [%r{/api/v1/users}]
   end
 
   class HttpError < StandardError
@@ -107,8 +111,6 @@ class MyApp < Sinatra::Base
 
     do_slow_stuff
     do_sleep(3)
-    do_sleep(2)
-    do_sleep(1)
 
     json(
       status: true,

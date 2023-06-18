@@ -1,0 +1,3 @@
+# Meta Programming Ruby
+
+オープンクラス
